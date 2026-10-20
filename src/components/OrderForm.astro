@@ -1,0 +1,142 @@
+---
+// Formulario de encargo / contacto.
+// Si `site.formEndpoint` está vacío, al enviar se abre el correo del cliente con el mensaje ya escrito.
+import { site } from '../data/site';
+import { products } from '../data/products';
+
+interface Props {
+  subject: string;
+  piece?: string;
+  messagePlaceholder?: string;
+  thanks: string;
+  thanksTitle?: string;
+  withConfig?: boolean;
+  choosePiece?: boolean;
+}
+const {
+  subject, piece = '', messagePlaceholder = 'Cuéntanos lo que quieras.', thanks,
+  thanksTitle = 'Gracias. Ya está en el taller.', withConfig = false, choosePiece = false,
+} = Astro.props;
+const b = import.meta.env.BASE_URL;
+---
+<form class="of" data-form data-endpoint={site.formEndpoint} data-key={site.formAccessKey} data-email={site.email} novalidate>
+  <input type="hidden" name="asunto" value={subject} />
+  {piece && <input type="hidden" name="pieza" value={piece} />}
+  {withConfig && <input type="hidden" name="configuracion" value="" />}
+  <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="of-g">
+    <label><span class="sr-only">Nombre</span><input class="field" name="nombre" placeholder="Nombre" autocomplete="name" required /></label>
+    <label><span class="sr-only">Teléfono</span><input class="field" name="telefono" type="tel" placeholder="Teléfono" autocomplete="tel" /></label>
+    <label><span class="sr-only">Correo</span><input class="field" name="correo" type="email" placeholder="Correo" autocomplete="email" required /></label>
+    <label><span class="sr-only">Localidad</span><input class="field" name="localidad" placeholder="Localidad" autocomplete="address-level2" /></label>
+    {choosePiece && (
+      <label class="full"><span class="sr-only">Mueble</span>
+        <select class="field" name="pieza">
+          <option value="">¿Qué mueble te interesa? (opcional)</option>
+          {products.map((p) => <option>{p.name}</option>)}
+          <option>Otro, a medida</option>
+          <option>Solo quiero visitar el taller</option>
+        </select>
+      </label>
+    )}
+    <label class="full"><span class="sr-only">Mensaje</span><textarea class="field" name="mensaje" rows="5" placeholder={messagePlaceholder}></textarea></label>
+    <label class="check full">
+      <input type="checkbox" name="privacidad" required />
+      <span>He leído la <a href={`${b}privacidad/`} target="_blank">política de privacidad</a> y acepto que usen mis datos para responderme.</span>
+    </label>
+    <p class="err full" data-err hidden></p>
+    <button type="submit" class="btn btn-moss btn-block full">Enviar {withConfig ? 'encargo' : 'mensaje'}</button>
+  </div>
+
+  <div class="of-ok" data-ok hidden>
+    <p class="serif ok-t">{thanksTitle}</p>
+    <p class="body-text">{thanks}</p>
+    <p class="ok-mail" data-mailnote hidden>Se ha abierto tu programa de correo con el mensaje escrito. Si no se abrió, escríbenos a <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  </div>
+</form>
+
+<style>
+  .of-g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .full { grid-column: 1 / -1; }
+  select.field { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 22px) 50%, calc(100% - 17px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 44px; }
+  .err { color: #9A3B2B; font-size: 14px; }
+  .field[aria-invalid="true"] { border-color: #9A3B2B; }
+  .of-ok { display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: clamp(28px, 3.3vw, 48px); background: var(--paper); min-height: 100%; }
+  .of-ok[hidden] { display: none; }
+  .ok-t { font-size: clamp(32px, 3vw, 44px); line-height: 1.05; }
+  .ok-mail { font-size: 14px; color: var(--muted); }
+  .ok-mail a { border-bottom: 1px solid currentColor; }
+  @media (max-width: 600px) {
+    .of-g { grid-template-columns: 1fr; gap: 10px; }
+  }
+</style>
+
+<script>
+  const labels: Record<string, string> = {
+    nombre: 'Nombre', telefono: 'Teléfono', correo: 'Correo', localidad: 'Localidad',
+    pieza: 'Mueble', configuracion: 'Configuración', mensaje: 'Mensaje',
+  };
+
+  document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
+    const err = form.querySelector<HTMLElement>('[data-err]')!;
+    const grid = form.querySelector<HTMLElement>('.of-g')!;
+    const ok = form.querySelector<HTMLElement>('[data-ok]')!;
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    const done = (viaMail: boolean) => {
+      grid.hidden = true;
+      ok.hidden = false;
+      form.querySelector<HTMLElement>('[data-mailnote]')!.hidden = !viaMail;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.hidden = true;
+      form.querySelectorAll('.field').forEach((f) => f.removeAttribute('aria-invalid'));
+      const bad = [...form.querySelectorAll<HTMLInputElement>('input[required]')].filter((i) => !i.checkValidity());
+      if (bad.length) {
+        bad.forEach((i) => i.setAttribute('aria-invalid', 'true'));
+        const priv = bad.some((i) => i.name === 'privacidad');
+        const other = bad.some((i) => i.name !== 'privacidad');
+        err.textContent = other
+          ? `Revisa tu nombre y tu correo${priv ? ', y acepta la política de privacidad' : ''}.`
+          : 'Falta aceptar la política de privacidad.';
+        err.hidden = false;
+        bad[0].focus();
+        return;
+      }
+      const fd = new FormData(form);
+      if (fd.get('botcheck')) return;
+      const data: Record<string, string> = {};
+      fd.forEach((v, k) => { if (k !== 'botcheck' && k !== 'privacidad' && String(v).trim()) data[k] = String(v); });
+
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        btn.disabled = true;
+        btn.textContent = 'Enviando…';
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ access_key: form.dataset.key, subject: data.asunto, from_name: data.nombre, email: data.correo, ...data }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          done(false);
+        } catch {
+          err.textContent = `No se pudo enviar. Escríbenos a ${form.dataset.email} o inténtalo de nuevo.`;
+          err.hidden = false;
+          btn.disabled = false;
+          btn.textContent = 'Enviar';
+        }
+        return;
+      }
+
+      // Sin servicio de formularios: se abre el correo del cliente
+      const body = Object.entries(data).filter(([k]) => k !== 'asunto').map(([k, v]) => `${labels[k] ?? k}: ${v}`).join('\n');
+      location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(data.asunto)}&body=${encodeURIComponent(body)}`;
+      done(true);
+    });
+  });
+</script>

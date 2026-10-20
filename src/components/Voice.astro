@@ -1,0 +1,9 @@
+---
+// Una cita de Javier (serif cursiva) o de Roi (sans verde), con su firma.
+interface Props { who: 'javier' | 'roi'; by: string; size?: string; class?: string; light?: boolean }
+const { who, by, size, class: cls, light } = Astro.props;
+---
+<figure class:list={['voice', cls]}>
+  <blockquote class={who === 'javier' ? 'v-javier' : 'v-roi'} style={size ? `font-size:${size}` : undefined}><slot /></blockquote>
+  <figcaption class="by" style={light ? 'color:var(--paper)' : undefined}>{by}</figcaption>
+</figure>

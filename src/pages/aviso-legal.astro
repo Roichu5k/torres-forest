@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+<Layout title="Aviso legal" cta={false}>
+  <article class="legal wrap">
+    <h1 class="serif">Aviso legal</h1>
+    <p class="warn">Texto de ejemplo. Hay que revisarlo y completarlo con los datos reales antes de publicar la web de verdad.</p>
+    <h2>Titular de la web</h2>
+    <p>En cumplimiento de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que esta web pertenece a:</p>
+    <ul>
+      <li>Titular: {site.owner.legalName}</li>
+      <li>NIF: {site.owner.nif}</li>
+      <li>Domicilio: {site.address.street}, {site.address.postalCode} {site.address.city} ({site.address.province})</li>
+      <li>Correo: {site.email}</li>
+      <li>Teléfono: {site.phone}</li>
+    </ul>
+    <h2>Uso de la web</h2>
+    <p>La información de esta web es orientativa. Los precios, medidas y plazos se confirman siempre por escrito antes de encargar un mueble.</p>
+    <h2>Propiedad intelectual</h2>
+    <p>Los textos, diseños de muebles y fotografías propias de esta web pertenecen a {site.name}. No se pueden copiar sin permiso.</p>
+    <h2>Enlaces</h2>
+    <p>{site.name} no se hace responsable del contenido de las webs externas a las que se enlaza.</p>
+  </article>
+</Layout>

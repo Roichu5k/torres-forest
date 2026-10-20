@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Img from '../../components/Img.astro';
+import { products, trees, fmtPrice, minPrice } from '../../data/products';
+const b = import.meta.env.BASE_URL;
+---
+<Layout title="Muebles" description="Seis muebles de castaño macizo hechos bajo pedido en Chantada (Lugo). Cada uno lleva grabado el árbol del que salió.">
+  <section class="head wrap g12">
+    <h1 class="serif">Muebles</h1>
+    <p class="body-text">Seis piezas. Todas se hacen bajo pedido, con castaño de nuestros soutos de Chantada, y cada una lleva grabado su árbol.</p>
+  </section>
+
+  <section class="grid wrap">
+    {products.map((p, i) => (
+      <a href={`${b}muebles/${p.slug}/`} class="card">
+        <div class="ph card-ph">
+          <Img photo={p.views[0]} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" w={1100} />
+          <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <div class="card-t">
+          <span class="serif name">{p.name}</span>
+          <span class="price">desde {fmtPrice(minPrice(p))}</span>
+        </div>
+        <div class="card-s">
+          <span>{p.cat}</span>
+          <span>Árbol {trees[p.tree].id} · {p.plazo} semanas</span>
+        </div>
+      </a>
+    ))}
+  </section>
+
+  <section class="custom wrap">
+    <p class="serif">¿Buscas algo que no está aquí?</p>
+    <p class="body-text">También hacemos muebles a medida: cocinas, puertas, escaleras, lo que haga falta. Empezamos igual, hablando.</p>
+    <a href={`${b}contacto/`} class="btn btn-line">Cuéntanos tu idea</a>
+  </section>
+</Layout>
+
+<style>
+  .head { padding-top: clamp(56px, 7vw, 100px); padding-bottom: clamp(40px, 5vw, 72px); align-items: end; row-gap: 20px; }
+  .head h1 { grid-column: 1 / 7; font-size: clamp(56px, 8.3vw, 120px); line-height: .95; letter-spacing: -.03em; }
+  .head p { grid-column: 8 / 13; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px 24px; }
+  .card { display: flex; flex-direction: column; gap: 10px; }
+  .card:hover { color: inherit; }
+  .card-ph { aspect-ratio: 4 / 5; margin-bottom: 6px; }
+  .card-ph :global(img) { transition: transform 1.4s var(--ease); }
+  .card:hover .card-ph :global(img) { transform: scale(1.04); }
+  .n { position: absolute; top: 14px; left: 14px; font-size: 12px; padding: 5px 10px; background: rgba(242,238,230,.94); border-radius: 999px; }
+  .card-t, .card-s { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .name { font-size: 28px; font-weight: 400; line-height: 1.1; }
+  .card:hover .name { color: var(--moss); }
+  .price { font-size: 15px; font-variant-numeric: tabular-nums; }
+  .card-s { font-size: 14px; color: var(--muted); }
+  .custom { margin: clamp(96px, 11vw, 160px) 0; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; max-width: 760px; }
+  .custom .serif { font-size: clamp(32px, 3.3vw, 48px); line-height: 1.1; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) {
+    .head { display: flex; flex-direction: column; align-items: stretch; }
+    .grid { grid-template-columns: 1fr; gap: 40px; }
+    .name { font-size: 26px; }
+  }
+</style>

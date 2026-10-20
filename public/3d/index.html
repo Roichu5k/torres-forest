@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muebles en 3D · Torres Forest</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Hanken+Grotesk:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#ECE8E0;color:#2E2D2B;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+a{color:inherit;text-decoration:none}
+a:hover{color:#3E5A3F}
+three-d-stage{position:fixed;inset:0;width:100vw;height:100vh}
+three-d-stage:not(:defined){visibility:hidden}
+.ov{position:fixed;z-index:2}
+.top{top:24px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;pointer-events:none}
+.top>*{pointer-events:auto}
+.brand{font-family:'Newsreader',serif;font-size:24px}
+.crumb{font-size:14px;color:#7A7670;margin-top:4px}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
+.back{font-size:15px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px}
+.price{font-family:'Newsreader',serif;font-size:34px;margin-top:14px;font-variant-numeric:tabular-nums}
+.dims{font-size:14px;color:#55524D}
+.panel{left:50%;transform:translateX(-50%);bottom:24px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 18px;padding:14px 16px;background:rgba(246,243,237,.94);backdrop-filter:blur(8px);border:1px solid #DAD5CC;width:max-content;max-width:calc(100vw - 32px)}
+.row{display:flex;flex-direction:column;gap:6px}
+.row>span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#7A7670}
+.seg{display:inline-flex;gap:2px;padding:3px;background:#E0DBD2;border-radius:999px}
+.seg button{appearance:none;border:0;background:transparent;font:500 13px 'Hanken Grotesk',sans-serif;color:#2E2D2B;padding:8px 13px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s;min-height:40px}
+.seg button[aria-pressed="true"]{background:#2E2D2B;color:#F2EEE6}
+.note2{font-size:12px;color:#9A968F;margin-top:2px}
+.cta{font-size:14px;font-weight:500;padding:11px 18px;background:#3E5A3F;color:#F2EEE6;border-radius:999px;white-space:nowrap}
+.cta:hover{color:#F2EEE6;background:#34503A}
+.lbl{position:fixed;z-index:1;transform:translate(-50%,-50%);font:500 13px 'Hanken Grotesk',sans-serif;padding:4px 9px;background:#2E2D2B;color:#F2EEE6;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .3s}
+@media (max-width:760px){
+  .top{left:18px;right:18px;top:18px}
+  .price{font-size:26px;margin-top:8px}
+  .panel{left:10px;right:10px;bottom:10px;transform:none;width:auto;max-width:none;padding:12px;gap:10px 14px}
+  .seg button{padding:9px 12px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<three-d-stage name="mesa-souto" background="#ECE8E0" autorotate no-toolbar></three-d-stage>
+
+<div class="ov top">
+  <div>
+    <a class="brand" href="../">Torres Forest</a>
+    <div class="crumb" id="crumb">Mesa Souto · vista 3D</div>
+    <div class="note2">Modelo provisional · textura generada</div>
+  </div>
+  <div class="right">
+    <a class="back" id="back" href="../muebles/mesa-souto/">← Volver a la ficha</a>
+    <div class="price" id="price">3.450 €</div>
+    <div class="dims" id="dims">240 × 100 × 76 cm</div>
+  </div>
+</div>
+
+<div class="ov panel" id="panel"></div>
+
+<div class="lbl" id="lL"></div><div class="lbl" id="lW"></div><div class="lbl" id="lH"></div>
+
+<script src="three-d-stage.js"></script>
+<script type="module">
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+const rng = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
+
+function grainCanvas() {
+  const c = document.createElement('canvas'); c.width = 2048; c.height = 512;
+  const g = c.getContext('2d'), r = rng(112);
+  g.fillStyle = '#E9DCC8'; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < 26; i++) { const y = r() * 512, h = 8 + r() * 40; g.fillStyle = `rgba(150,105,60,${0.05 + r() * 0.1})`; g.fillRect(0, y, 2048, h); }
+  const arches = [[520, 250, 300], [1350, 270, 380], [1850, 230, 220]];
+  for (let i = 0; i < 170; i++) {
+    const y0 = (i / 170) * 560 - 24, a = 0.15 + r() * 0.35, w = 0.5 + r() * 1.8;
+    g.strokeStyle = `rgba(${90 + r() * 30 | 0},${55 + r() * 20 | 0},${25 + r() * 15 | 0},${a})`;
+    g.lineWidth = w; g.beginPath();
+    for (let x = 0; x <= 2048; x += 8) {
+      let y = y0 + Math.sin(x * 0.0021 + i * 0.37) * 5 + Math.sin(x * 0.011 + i) * 1.2;
+      for (const [cx, cy, wd] of arches) { const d = (x - cx) / wd, k = Math.exp(-d * d); y += (cy - y0) * 0.55 * k * Math.exp(-Math.abs(y0 - cy) / 260); }
+      x ? g.lineTo(x, y) : g.moveTo(x, y);
+    }
+    g.stroke();
+  }
+  for (let i = 0; i < 2600; i++) { g.fillStyle = `rgba(80,50,25,${0.12 + r() * 0.2})`; g.fillRect(r() * 2048, r() * 512, 2 + r() * 6, 1); }
+  return c;
+}
+const canvas = grainCanvas();
+function straightCanvas() {
+  const c = document.createElement('canvas'); c.width = 2048; c.height = 512;
+  const g = c.getContext('2d'), r = rng(97);
+  g.fillStyle = '#EADFCD'; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < 20; i++) { const y = r() * 512, h = 6 + r() * 30; g.fillStyle = `rgba(150,105,60,${0.04 + r() * 0.08})`; g.fillRect(0, y, 2048, h); }
+  for (let i = 0; i < 150; i++) {
+    const y0 = (i / 150) * 540 - 14, a = 0.08 + r() * 0.22;
+    g.strokeStyle = `rgba(${95 + r() * 30 | 0},${60 + r() * 20 | 0},${30 + r() * 15 | 0},${a})`;
+    g.lineWidth = 0.6 + r() * 1.6; g.beginPath();
+    const ph = r() * 6, amp = 1 + r() * 2.5;
+    for (let x = 0; x <= 2048; x += 16) { const y = y0 + Math.sin(x * 0.0016 + ph) * amp + Math.sin(x * 0.006 + i) * 0.5; x ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.stroke();
+  }
+  for (let i = 0; i < 2200; i++) { g.fillStyle = `rgba(80,50,25,${0.1 + r() * 0.18})`; g.fillRect(r() * 2048, r() * 512, 2 + r() * 6, 1); }
+  return c;
+}
+const canvasS = straightCanvas();
+function tex(rot, rx, ry, off, cv) {
+  const t = new THREE.CanvasTexture(cv || canvas);
+  t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8;
+  if (rot) { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; }
+  t.repeat.set(rx, ry); if (off) t.offset.set(0.5, 0.5);
+  return t;
+}
+const M = n => new THREE.MeshStandardMaterial({ name: n, metalness: 0 });
+const matTop = M('castano_tablero'); matTop.map = matTop.bumpMap = tex(false, 1 / 3, 1 / 1.1, true); matTop.bumpScale = 0.4;
+const matLeg = M('castano_patas'); matLeg.map = tex(true, 0.3, 1);
+const matRail = M('castano_faldon'); matRail.map = tex(false, 1, 0.25);
+const matH = M('castano_veta_horizontal'); matH.map = matH.bumpMap = tex(false, 0.8, 3.2, true, canvasS); matH.bumpScale = 0.3;
+const matV = M('castano_veta_vertical'); matV.map = matV.bumpMap = tex(true, 3.2, 0.8, true, canvasS); matV.bumpScale = 0.3;
+const ALL = [matTop, matLeg, matRail, matH, matV];
+
+// ---------- helpers ----------
+function ext(shape, depth, bev = 0.003) {
+  const g = new THREE.ExtrudeGeometry(shape, { depth: Math.max(0.001, depth - 2 * bev), bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: 2, curveSegments: 14 });
+  g.translate(0, 0, bev); return g;
+}
+function rectS(x0, y0, x1, y1, r = 0) {
+  const s = new THREE.Shape();
+  if (!r) { s.moveTo(x0, y0); s.lineTo(x1, y0); s.lineTo(x1, y1); s.lineTo(x0, y1); s.closePath(); return s; }
+  s.moveTo(x0 + r, y0); s.lineTo(x1 - r, y0); s.quadraticCurveTo(x1, y0, x1, y0 + r); s.lineTo(x1, y1 - r); s.quadraticCurveTo(x1, y1, x1 - r, y1);
+  s.lineTo(x0 + r, y1); s.quadraticCurveTo(x0, y1, x0, y1 - r); s.lineTo(x0, y0 + r); s.quadraticCurveTo(x0, y0, x0 + r, y0); return s;
+}
+// perfil en (z,y) con grosor en x desde x0
+function profX(shape, t, x0, mat, name) { const g = ext(shape, t); g.rotateY(-Math.PI / 2); g.translate(x0 + t, 0, 0); const m = new THREE.Mesh(g, mat); m.name = name; return m; }
+// planta en (x,z) con grosor hacia abajo desde yTop
+function horiz(shape, t, yTop, mat, name) { const g = ext(shape, t); g.rotateX(Math.PI / 2); g.translate(0, yTop, 0); const m = new THREE.Mesh(g, mat); m.name = name; return m; }
+const mirrorS = (pts) => { const s = new THREE.Shape(); pts.forEach(([x, y], i) => i ? s.lineTo(-x, y) : s.moveTo(-x, y)); s.closePath(); return s; };
+
+// ---------- Mesa Souto ----------
+const H = 0.76, T = 0.05;
+function topShape(L, W, live) {
+  if (!live) return rectS(-L / 2, -W / 2, L / 2, W / 2, 0.008);
+  const s = new THREE.Shape(), n = 140, r = rng(97), ph = [r() * 6, r() * 6, r() * 6, r() * 6];
+  const edge = (x, side) => { const u = x / L; return 0.018 * Math.sin(u * 7.3 + ph[side]) + 0.009 * Math.sin(u * 19 + ph[side + 2]) + 0.004 * Math.sin(u * 53 + side); };
+  for (let i = 0; i <= n; i++) { const x = -L / 2 + (i / n) * L; const y = -W / 2 - 0.012 + edge(x, 0); i ? s.lineTo(x, y) : s.moveTo(x, y); }
+  for (let i = n; i >= 0; i--) { const x = -L / 2 + (i / n) * L; s.lineTo(x, W / 2 + 0.012 + edge(x, 1)); }
+  s.closePath(); return s;
+}
+function buildMesa(o) {
+  const SZ = [{ L: 2.0, W: 0.95 }, { L: 2.4, W: 1.0 }, { L: 2.8, W: 1.05 }][o.size], { L, W } = SZ, live = o.edge === 1;
+  const g = new THREE.Group(); g.name = 'mesa_souto';
+  const bev = live ? 0.006 : 0.003;
+  const topGeo = new THREE.ExtrudeGeometry(topShape(L, W, live), { depth: T - bev * 2, bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: live ? 3 : 2, curveSegments: 8 });
+  topGeo.rotateX(-Math.PI / 2);
+  const top = new THREE.Mesh(topGeo, matTop); top.name = 'tablero'; top.position.y = H - T + bev; g.add(top);
+  const legH = H - T, lx = L / 2 - 0.20 - 0.045, lz = W / 2 - 0.07 - 0.045;
+  const legGeo = new THREE.CylinderGeometry(0.09 / Math.SQRT2, 0.068 / Math.SQRT2, legH, 4, 1); legGeo.rotateY(Math.PI / 4);
+  [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([sx, sz], i) => { const m = new THREE.Mesh(legGeo, matLeg); m.name = 'pata_' + (i + 1); m.position.set(sx * lx, legH / 2, sz * lz); g.add(m); });
+  const rh = 0.10, rt = 0.026, ry = legH - rh / 2 - 0.004;
+  const longGeo = new THREE.BoxGeometry(2 * lx - 0.07, rh, rt);
+  [1, -1].forEach((sz, i) => { const m = new THREE.Mesh(longGeo, matRail); m.name = 'faldon_largo_' + (i + 1); m.position.set(0, ry, sz * (lz + 0.045 - rt / 2 - 0.012)); g.add(m); });
+  const shortGeo = new THREE.BoxGeometry(rt, rh, 2 * lz - 0.07);
+  [1, -1].forEach((sx, i) => { const m = new THREE.Mesh(shortGeo, matRail); m.name = 'faldon_corto_' + (i + 1); m.position.set(sx * (lx + 0.045 - rt / 2 - 0.012), ry, 0); g.add(m); });
+  const mid = new THREE.Mesh(new THREE.BoxGeometry(rt, 0.06, 2 * lz - 0.07), matRail); mid.name = 'travesano'; mid.position.set(0, legH - 0.034, 0); g.add(mid);
+  return g;
+}
+
+// ---------- Butaca Horta (frente = +z) ----------
+function buildHorta(o) {
+  const g = new THREE.Group(); g.name = 'butaca_horta';
+  const slope = 0.32, a = Math.atan(slope), yTop = z => 0.155 + (z + 0.40) * slope;
+  const SI = 0.234, ST = 0.032; // cara interior de los largueros y grosor
+  // largueros
+  const str = new THREE.Shape();
+  str.moveTo(-0.44, 0.0); str.lineTo(-0.22, 0.0);
+  str.bezierCurveTo(-0.05, 0.0, 0.16, 0.20, 0.38, 0.27);
+  str.lineTo(0.38, 0.365); str.quadraticCurveTo(0.38, yTop(0.38), 0.34, yTop(0.34));
+  str.lineTo(-0.40, yTop(-0.40)); str.closePath();
+  g.add(profX(str, ST, SI, matH, 'larguero_der'));
+  g.add(profX(str, ST, -SI - ST, matH, 'larguero_izq'));
+  // patas delanteras y postes traseros (por fuera de los largueros)
+  const LX = SI + ST, LT = 0.04, AY = 0.588;
+  const legS = new THREE.Shape(); legS.moveTo(0.245, 0); legS.lineTo(0.345, 0); legS.lineTo(0.345, AY); legS.lineTo(0.245, AY); legS.closePath();
+  g.add(profX(legS, LT, LX, matV, 'pata_del_der')); g.add(profX(legS, LT, -LX - LT, matV, 'pata_del_izq'));
+  const postS = new THREE.Shape(); postS.moveTo(-0.475, 0.05); postS.lineTo(-0.385, 0.05); postS.lineTo(-0.395, AY); postS.lineTo(-0.47, AY); postS.closePath();
+  g.add(profX(postS, LT, LX, matV, 'poste_tras_der')); g.add(profX(postS, LT, -LX - LT, matV, 'poste_tras_izq'));
+  // ménsulas bajo el brazo
+  const cor = new THREE.Shape(); cor.moveTo(0.345, AY); cor.lineTo(0.43, AY); cor.quadraticCurveTo(0.36, AY - 0.015, 0.345, AY - 0.10); cor.closePath();
+  g.add(profX(cor, 0.03, LX + 0.005, matH, 'mensula_der')); g.add(profX(cor, 0.03, -LX - 0.035, matH, 'mensula_izq'));
+  // brazos
+  const xi = 0.255, xo = 0.42, xr = 0.335, zf = 0.45, zr = -0.475, r = 0.05;
+  const armPts = s => { const S = new THREE.Shape(); const X = v => v * s;
+    S.moveTo(X(xi), zr); S.lineTo(X(xr), zr); S.lineTo(X(xo), zf - r); S.quadraticCurveTo(X(xo), zf, X(xo - r), zf);
+    S.lineTo(X(xi + 0.02), zf); S.quadraticCurveTo(X(xi), zf, X(xi), zf - 0.02); S.closePath(); return S; };
+  g.add(horiz(armPts(1), 0.026, AY + 0.026, matV, 'brazo_der')); g.add(horiz(armPts(-1), 0.026, AY + 0.026, matV, 'brazo_izq'));
+  // asiento: listones con caída redondeada delante
+  const SL = SI + ST - 0.004, sw = 0.062, st = 0.02;
+  const n = [-Math.sin(a), Math.cos(a)];
+  const slat = (z, y, beta, name) => { const m = horiz(rectS(-SL, -sw / 2, SL, sw / 2, 0.004), st, st / 2, matH, name); m.rotation.x = beta; m.position.set(0, y, z); g.add(m); };
+  const R = 0.075, z0 = 0.30, P0 = [z0 + n[0] * 0.01, yTop(z0) + n[1] * 0.01], C = [P0[0] - n[0] * R, P0[1] - n[1] * R];
+  for (let j = 0; j < 3; j++) { const b = -a + j * 0.62; slat(C[0] + R * Math.sin(b), C[1] + R * Math.cos(b), b, 'asiento_' + (3 - j)); }
+  for (let k = 1; k <= 7; k++) { const z = z0 - k * 0.071; slat(z + n[0] * 0.01, yTop(z) + n[1] * 0.01, -a, 'asiento_' + (3 + k)); }
+  // respaldo
+  const back = new THREE.Group(); back.name = 'respaldo';
+  const tilt = 0.40, NS = 6, hb = 0.22, ht = 0.33, wb = 0.064, wt = 0.098, top = x => 0.88 - 0.55 * x * x;
+  for (let i = 0; i < NS; i++) {
+    const u = (i + 0.5) / NS - 0.5, xb = u * 2 * hb, xt = u * 2 * ht;
+    const S = new THREE.Shape(); S.moveTo(xb - wb / 2, -0.03); S.lineTo(xb + wb / 2, -0.03);
+    const steps = 6; for (let k = 0; k <= steps; k++) { const x = xt + wt / 2 - (k / steps) * wt; S.lineTo(x, top(x)); }
+    S.closePath();
+    const geo = ext(S, 0.02); geo.translate(0, 0, -0.01);
+    const m = new THREE.Mesh(geo, matV); m.name = 'respaldo_' + (i + 1); back.add(m);
+  }
+  [[0.40, 0.31, 0.075, 'travesano_alto'], [0.10, 0.25, 0.06, 'travesano_bajo']].forEach(([s, hw, h, name]) => {
+    const geo = ext(rectS(-hw, s - h / 2, hw, s + h / 2, 0.006), 0.022); geo.translate(0, 0, -0.033);
+    const m = new THREE.Mesh(geo, matH); m.name = name; back.add(m);
+  });
+  back.rotation.x = -tilt; back.position.set(0, 0.19, -0.265); g.add(back);
+  // reposapiés
+  if (o.foot) {
+    const F = new THREE.Group(); F.name = 'reposapies';
+    const fx = 0.20, ft = 0.028, fy = z => 0.355 - (z - 0.62) * 0.24;
+    const rail = new THREE.Shape(); rail.moveTo(0.60, fy(0.60)); rail.lineTo(1.04, fy(1.04)); rail.lineTo(1.04, fy(1.04) - 0.08); rail.lineTo(0.60, fy(0.60) - 0.08); rail.closePath();
+    F.add(profX(rail, ft, fx - ft, matH, 'rep_larguero_der')); F.add(profX(rail, ft, -fx, matH, 'rep_larguero_izq'));
+    [[0.94, 1.02, fy(1.0) - 0.01, 'rep_pata_del'], [0.62, 0.70, fy(0.62) - 0.01, 'rep_pata_tras']].forEach(([z0, z1, h, name]) => {
+      const S = new THREE.Shape(); S.moveTo(z0, 0); S.lineTo(z1, 0); S.lineTo(z1, h); S.lineTo(z0, h); S.closePath();
+      F.add(profX(S, 0.034, fx, matV, name + '_der')); F.add(profX(S, 0.034, -fx - 0.034, matV, name + '_izq'));
+    });
+    const fa = Math.atan(0.24);
+    for (let k = 0; k < 6; k++) { const z = 0.635 + k * 0.071; const m = horiz(rectS(-fx - 0.03, -sw / 2, fx + 0.03, sw / 2, 0.004), st, st / 2, matH, 'rep_liston_' + (k + 1)); m.rotation.x = fa; m.position.set(0, fy(z) + 0.011, z); F.add(m); }
+    g.add(F);
+  }
+  return g;
+}
+
+// ---------- productos ----------
+const P = {
+  mesa: { name: 'Mesa Souto', file: 'mesa-souto', build: buildMesa, base: [2950, 3450, 3950], href: '../muebles/mesa-souto/',
+    opts: [
+      { k: 'size', l: 'Largo', v: ['200 cm', '240 cm', '280 cm'], d: 1 },
+      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Cera', 'Jabón'], d: 0, p: [0, 120, 90], tint: ['#D29E6A', '#C68F5C', '#EBD6B6'], rough: [0.55, 0.38, 0.78] },
+      { k: 'edge', l: 'Canto', v: ['Recto', 'Vivo'], d: 0, p: [0, 280] }
+    ], price: o => P.mesa.base[o.size] },
+  horta: { name: 'Butaca Horta', file: 'butaca-horta', build: buildHorta, href: '../muebles/butaca-horta/',
+    opts: [
+      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Jabón', 'Sin tratar'], d: 0, p: [0, 40, 0], tint: ['#D29E6A', '#EBD6B6', '#E2C39C'], rough: [0.5, 0.75, 0.88] },
+      { k: 'foot', l: 'Reposapiés', v: ['Sin', 'Con'], d: 0, p: [0, 240] }
+    ], price: () => 890 }
+};
+const qp = new URLSearchParams(location.search).get('p');
+let cur = P[qp] ? qp : 'mesa', O = {};
+const resetOpts = () => { O = {}; P[cur].opts.forEach(x => O[x.k] = x.d); O.dim = 0; };
+
+function applyFinish() {
+  const f = P[cur].opts.find(x => x.k === 'fin'), i = O.fin;
+  for (const m of ALL) { m.color.set(f.tint[i]); m.roughness = f.rough[i]; m.needsUpdate = true; }
+  matLeg.color.offsetHSL(0, 0, -0.03); matRail.color.offsetHSL(0, 0, -0.05); matV.color.offsetHSL(0, 0, -0.015);
+}
+
+// medidas
+const dimGroup = new THREE.Group(); stage._scene.add(dimGroup);
+const dimMat = new THREE.LineBasicMaterial({ color: 0x2E2D2B });
+const anchors = {}, labels = { lL: document.getElementById('lL'), lW: document.getElementById('lW'), lH: document.getElementById('lH') };
+function buildDims(obj) {
+  dimGroup.clear();
+  const b = new THREE.Box3().setFromObject(obj), sz = b.getSize(new THREE.Vector3());
+  const off = Math.max(0.08, sz.x * 0.05), y = b.min.y + 0.002, V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const seg = (p, q) => dimGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([p, q]), dimMat));
+  const zf = b.max.z + off, xr = b.max.x + off, zb = b.min.z - off, tk = 0.035;
+  seg(V(b.min.x, y, zf), V(b.max.x, y, zf)); seg(V(b.min.x, y, zf - tk), V(b.min.x, y, zf + tk)); seg(V(b.max.x, y, zf - tk), V(b.max.x, y, zf + tk));
+  seg(V(xr, y, b.min.z), V(xr, y, b.max.z)); seg(V(xr - tk, y, b.min.z), V(xr + tk, y, b.min.z)); seg(V(xr - tk, y, b.max.z), V(xr + tk, y, b.max.z));
+  seg(V(xr, b.min.y, zb), V(xr, b.max.y, zb)); seg(V(xr - tk, b.max.y, zb), V(xr + tk, b.max.y, zb));
+  anchors.lL = V((b.min.x + b.max.x) / 2, y, zf); anchors.lW = V(xr, y, (b.min.z + b.max.z) / 2); anchors.lH = V(xr, (b.min.y + b.max.y) / 2, zb);
+  dimGroup.visible = O.dim === 1;
+  const cm = v => Math.round(v * 100);
+  labels.lL.textContent = cm(sz.x) + ' cm'; labels.lW.textContent = cm(sz.z) + ' cm'; labels.lH.textContent = cm(sz.y) + ' cm';
+  return [cm(sz.x), cm(sz.z), cm(sz.y)];
+}
+function tick() {
+  const cam = stage._camera, rect = stage.getBoundingClientRect(), on = O.dim === 1;
+  for (const k in labels) {
+    const el = labels[k]; el.style.opacity = on ? 1 : 0;
+    if (!on || !anchors[k] || !cam) continue;
+    const p = anchors[k].clone().project(cam);
+    el.style.left = (rect.left + (p.x * 0.5 + 0.5) * rect.width) + 'px';
+    el.style.top = (rect.top + (-p.y * 0.5 + 0.5) * rect.height) + 'px';
+  }
+  requestAnimationFrame(tick);
+}
+
+const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+function refresh(reframe) {
+  const pr = P[cur];
+  applyFinish();
+  const obj = pr.build(O);
+  stage.setAttribute('name', pr.file);
+  stage.setObject(obj, { keepCamera: !reframe });
+  if (reframe) { const c = stage._controls, d = 0.16 * (cur === 'mesa' ? 1 : 0.6); c.target.y -= d; stage._camera.position.y -= d; c.update(); }
+  const [x, z, h] = buildDims(obj);
+  let price = pr.price(O); pr.opts.forEach(op => { if (op.p) price += op.p[O[op.k]]; });
+  document.getElementById('price').textContent = fmt(price);
+  document.getElementById('dims').textContent = `${x} × ${z} × ${h} cm`;
+  document.getElementById('crumb').textContent = pr.name + ' · vista 3D';
+  document.getElementById('back').href = pr.href;
+}
+function seg(label, values, sel, on) {
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = `<span>${label}</span><div class="seg"></div>`;
+  const s = row.querySelector('.seg');
+  values.forEach((v, i) => { const b = document.createElement('button'); b.textContent = v; b.setAttribute('aria-pressed', i === sel);
+    b.onclick = () => { [...s.children].forEach((x, j) => x.setAttribute('aria-pressed', j === i)); on(i); }; s.appendChild(b); });
+  return row;
+}
+function renderPanel() {
+  const panel = document.getElementById('panel'); panel.innerHTML = '';
+  const keys = Object.keys(P);
+  panel.appendChild(seg('Pieza', keys.map(k => P[k].name), keys.indexOf(cur), i => { cur = keys[i]; resetOpts(); renderPanel(); refresh(true); history.replaceState(null, '', '?p=' + cur); }));
+  P[cur].opts.forEach(op => panel.appendChild(seg(op.l, op.v, O[op.k], i => { O[op.k] = i; refresh(false); })));
+  panel.appendChild(seg('Medidas', ['Ocultar', 'Mostrar'], O.dim, i => { O.dim = i; dimGroup.visible = i === 1; }));
+  const a = document.createElement('a'); a.className = 'cta'; a.href = P[cur].href + '#encargar'; a.textContent = 'Encargar'; panel.appendChild(a);
+}
+resetOpts(); renderPanel(); refresh(true); tick();
+</script>
+</body>
+</html>

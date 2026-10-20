@@ -1,0 +1,321 @@
+---
+// Sala de exposición: una pieza cada vez, a gran tamaño, con tres vistas, su ficha y su árbol.
+// En ordenador se elige en el índice o con las flechas; en móvil se desliza.
+import Img from './Img.astro';
+import Rings from './Rings.astro';
+import { products, trees } from '../data/products';
+
+const b = import.meta.env.BASE_URL;
+const VIEWS = ['Pieza', 'Detalle', 'En casa'];
+const data = products.map((p, i) => {
+  const t = trees[p.tree];
+  return {
+    n: String(i + 1).padStart(2, '0'), name: p.name, cat: p.cat, line: p.line, med: p.med, acab: p.acab,
+    plazo: `${p.plazo} semanas`, tree: t.id, souto: t.souto, tala: t.tala,
+    href: `${b}muebles/${p.slug}/`, model: p.model3d ? `${b}3d/?p=${p.model3d}` : '',
+  };
+});
+const P = data[0];
+const total = String(products.length).padStart(2, '0');
+---
+<section id="muebles" class="sala" data-sala aria-label="Muebles">
+  <script type="application/json" data-sala-json set:html={JSON.stringify(data)} />
+
+  <!-- Ordenador -->
+  <div class="sd">
+    <div class="sd-head">
+      <div class="sd-title"><h2 class="serif">Muebles</h2><span>Seis piezas. Cada una lleva grabado su árbol.</span></div>
+      <div class="sd-nav">
+        <span class="num"><span data-num>{P.n}</span> <span class="of">/ {total}</span></span>
+        <button class="arrow" type="button" aria-label="Pieza anterior" data-prev>←</button>
+        <button class="arrow" type="button" aria-label="Pieza siguiente" data-next>→</button>
+      </div>
+    </div>
+    <div class="sd-body">
+      <div class="sd-index">
+        <ol>
+          {data.map((p, i) => (
+            <li>
+              <button type="button" data-item={i} aria-current={i === 0 ? 'true' : 'false'}>
+                <span class="mono">{p.n}</span>
+                <span class="it"><span class="serif">{p.name}</span><span class="cat">{p.cat}</span></span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <p class="note">Todas se hacen bajo pedido, con castaño de nuestros soutos de Chantada.</p>
+      </div>
+      <div class="sd-stage">
+        {products.map((p, i) => p.views.map((v, j) => (
+          <div class="sd-img" data-img={`${i}-${j}`} data-on={i === 0 && j === 0 ? 'true' : 'false'}>
+            <Img photo={v} sizes="(max-width: 1400px) 50vw, 760px" w={1100} alt={`${p.name}: ${VIEWS[j].toLowerCase()}`} />
+          </div>
+        )))}
+        <div class="bars">{data.map((_, i) => <span data-bar={i} class:list={{ on: i === 0 }} />)}</div>
+        <div class="sd-ctrl">
+          <div class="seg" role="group" aria-label="Vista">
+            {VIEWS.map((l, j) => <button type="button" data-view={j} aria-pressed={j === 0 ? 'true' : 'false'}>{l}</button>)}
+          </div>
+          <a class="pill" href={P.model} data-3d hidden={!P.model}><Rings variant="badge" size={18} stroke={1.4} />Ver en 3D</a>
+        </div>
+      </div>
+      <div class="sd-info" data-panel>
+        <div class="top">
+          <span class="eyebrow"><span data-f="n">{P.n}</span> · <span data-f="cat">{P.cat}</span></span>
+          <h3 class="serif" data-f="name">{P.name}</h3>
+          <figure class="voice">
+            <blockquote class="v-roi" data-f="line">{P.line}</blockquote>
+            <figcaption class="by">Roi</figcaption>
+          </figure>
+        </div>
+        <div class="bottom">
+          <div class="spec">
+            <span>Medidas</span><span data-f="med">{P.med}</span>
+            <span>Madera</span><span>Castaño macizo</span>
+            <span>Acabado</span><span data-f="acab">{P.acab}</span>
+            <span>Plazo</span><span data-f="plazo">{P.plazo}</span>
+          </div>
+          <div class="tree-card">
+            <Rings size={44} color="var(--gold)" stroke={0.8} />
+            <div class="tc">
+              <span class="k">Madera de origen</span>
+              <span class="t">Árbol <span data-f="tree">{P.tree}</span></span>
+              <span class="d"><span data-f="souto">{P.souto}</span> · talado en <span data-f="tala">{P.tala}</span></span>
+            </div>
+          </div>
+          <a class="btn btn-moss btn-block" href={P.href} data-href>Pedir esta pieza</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Móvil -->
+  <div class="sm">
+    <div class="sm-head">
+      <h2 class="serif">Muebles</h2>
+      <span>Seis piezas. Desliza para verlas.</span>
+    </div>
+    <div class="sm-track" data-track>
+      {products.map((p, i) => (
+        <div class="sm-slide" data-slide={i}>
+          {p.views.map((v, j) => (
+            <div class="sd-img" data-mimg={`${i}-${j}`} data-on={j === 0 ? 'true' : 'false'}>
+              <Img photo={v} sizes="330px" w={700} alt={`${p.name}: ${VIEWS[j].toLowerCase()}`} />
+            </div>
+          ))}
+          <span class="badge mono">{data[i].n}</span>
+        </div>
+      ))}
+      <div class="sm-end"></div>
+    </div>
+    <div class="sm-bars">
+      {data.map((p, i) => <button type="button" data-mbar={i} aria-label={p.name}><span class:list={{ on: i === 0 }} /></button>)}
+    </div>
+    <div class="sm-ctrl">
+      <div class="seg sm-seg" role="group" aria-label="Vista">
+        {VIEWS.map((l, j) => <button type="button" data-mview={j} aria-pressed={j === 0 ? 'true' : 'false'}>{l}</button>)}
+      </div>
+      <span class="num"><span data-num>{P.n}</span> <span class="of">/ {total}</span></span>
+    </div>
+    <div class="sm-info">
+      <div class="top">
+        <span class="eyebrow" data-f="cat">{P.cat}</span>
+        <h3 class="serif" data-f="name">{P.name}</h3>
+        <figure class="voice">
+          <blockquote class="v-roi" data-f="line">{P.line}</blockquote>
+          <figcaption class="by">Roi</figcaption>
+        </figure>
+      </div>
+      <div class="spec">
+        <span>Medidas</span><span data-f="med">{P.med}</span>
+        <span>Acabado</span><span data-f="acab">{P.acab}</span>
+        <span>Plazo</span><span data-f="plazo">{P.plazo}</span>
+      </div>
+      <div class="tree-card">
+        <Rings size={40} color="var(--gold)" stroke={0.8} />
+        <div class="tc">
+          <span class="t">Árbol <span data-f="tree">{P.tree}</span></span>
+          <span class="d"><span data-f="souto">{P.souto}</span> · talado en <span data-f="tala">{P.tala}</span></span>
+        </div>
+      </div>
+      <a class="btn btn-line btn-block" href={P.model} data-3d hidden={!P.model}>Ver en 3D</a>
+      <a class="link-u" href={P.href} data-href>Ver la ficha completa</a>
+    </div>
+    <div class="sm-bar">
+      <div class="sb-t"><span class="serif" data-f="name">{P.name}</span><span>Bajo pedido · <span data-f="plazo">{P.plazo}</span></span></div>
+      <a class="btn btn-moss" href={P.href} data-href>Pedir</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sala { margin-top: clamp(96px, 12.5vw, 180px); background: var(--sala); border-top: 1px solid var(--line); scroll-margin-top: 0; }
+  .num { font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+  .of { color: var(--muted-2); }
+
+  /* ----- ordenador ----- */
+  .sd { height: clamp(760px, 100svh, 960px); display: grid; grid-template-rows: 96px minmax(0, 1fr); }
+  .sd-head { padding: 0 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+  .sd-title { display: flex; align-items: baseline; gap: 20px; }
+  .sd-title h2 { font-size: 44px; letter-spacing: -.02em; }
+  .sd-title span { font-size: 16px; color: var(--muted); }
+  .sd-nav { display: flex; align-items: center; gap: 8px; }
+  .sd-nav .num { margin-right: 12px; }
+  .arrow { width: 48px; height: 48px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent;
+    font-size: 18px; cursor: pointer; transition: background .3s; }
+  .arrow:hover { background: var(--chip); }
+  .sd-body { display: grid; grid-template-columns: clamp(240px, 20.8vw, 300px) minmax(0, 1fr) clamp(340px, 27.8vw, 400px); min-height: 0; }
+
+  .sd-index { padding: 28px 28px 40px 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; border-right: 1px solid var(--line); overflow: auto; }
+  .sd-index ol { list-style: none; margin: 0; padding: 0; }
+  .sd-index button { width: 100%; display: grid; grid-template-columns: 36px minmax(0, 1fr); padding: 16px 0; border: 0;
+    border-bottom: 1px solid var(--line); background: none; cursor: pointer; text-align: left; opacity: .4; transition: opacity .4s; }
+  .sd-index button:hover { opacity: .75; }
+  .sd-index button[aria-current="true"] { opacity: 1; }
+  .sd-index .mono { font-size: 12px; color: var(--muted); padding-top: 8px; }
+  .it { display: flex; flex-direction: column; gap: 4px; }
+  .it .serif { font-size: 26px; line-height: 1.1; font-weight: 400; }
+  .it .cat { font-size: 13px; color: var(--muted); }
+  .note { font-size: 14px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+
+  .sd-stage { position: relative; overflow: hidden; background: var(--ph); }
+  .sd-img { position: absolute; inset: 0; opacity: 0; transform: scale(1.05); pointer-events: none;
+    transition: opacity .9s ease, transform 1.8s var(--ease); }
+  .sd-img[data-on="true"] { opacity: 1; transform: scale(1); pointer-events: auto; }
+  .sd-img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .bars { position: absolute; top: 0; left: 0; right: 0; display: flex; gap: 3px; pointer-events: none; }
+  .bars span { flex: 1; height: 3px; background: rgba(46,45,43,.18); transition: background .5s; }
+  .bars span.on { background: var(--ink); }
+  .sd-ctrl { position: absolute; left: 28px; right: 28px; bottom: 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .pill[hidden] { display: none; }
+
+  .sd-info { padding: 36px 48px 40px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
+    border-left: 1px solid var(--line); transition: opacity .25s ease, transform .45s var(--ease); overflow: auto; }
+  .sd-info.fade { opacity: 0; transform: translateY(10px); }
+  .top { display: flex; flex-direction: column; gap: 18px; }
+  .top .eyebrow { font-size: 13px; }
+  .sd-info h3 { font-size: clamp(42px, 3.75vw, 54px); line-height: 1; letter-spacing: -.02em; }
+  .top .voice { gap: 12px; padding-top: 6px; }
+  .top .v-roi { font-size: 19px; line-height: 1.42; }
+  .bottom { display: flex; flex-direction: column; gap: 20px; }
+  .tc { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+  /* ----- móvil ----- */
+  .sm { display: none; }
+  .sm-head { padding: 56px 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .sm-head h2 { font-size: 40px; letter-spacing: -.02em; }
+  .sm-head span { font-size: 14px; color: var(--muted); }
+  .sm-track { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 22px; padding: 0 22px; scrollbar-width: none; }
+  .sm-track::-webkit-scrollbar { display: none; }
+  .sm-slide { flex: 0 0 min(330px, 84vw); height: 440px; position: relative; overflow: hidden; background: var(--ph); scroll-snap-align: start; }
+  .sm-slide .sd-img { transform: none; transition: opacity .8s ease; }
+  .badge { position: absolute; top: 14px; left: 14px; font-size: 12px; padding: 5px 10px; background: rgba(242,238,230,.94); border-radius: 999px; pointer-events: none; }
+  .sm-end { flex: 0 0 12px; }
+  .sm-bars { padding: 16px 22px 0; display: flex; gap: 4px; }
+  .sm-bars button { flex: 1; height: 16px; display: flex; align-items: center; background: none; border: 0; padding: 0; cursor: pointer; }
+  .sm-bars span { width: 100%; height: 2px; background: var(--line); transition: background .4s; }
+  .sm-bars span.on { background: var(--ink); }
+  .sm-ctrl { padding: 8px 22px 0; display: flex; justify-content: space-between; align-items: center; }
+  .sm-seg { background: var(--chip); padding: 3px; }
+  .sm-seg button { padding: 12px 15px; font-size: 13px; }
+  .sm-info { padding: 36px 22px 48px; display: flex; flex-direction: column; gap: 28px; }
+  .sm-info .top { gap: 14px; }
+  .sm-info .eyebrow { font-size: 12px; }
+  .sm-info h3 { font-size: 42px; line-height: 1; letter-spacing: -.02em; }
+  .sm-info .v-roi { font-size: 18px; }
+  .sm-info .spec { column-gap: 24px; }
+  .sm-info .spec > * { padding: 12px 0; }
+  .sm-info .tree-card { padding: 20px; gap: 16px; }
+  .sm-info .tree-card .t { font-size: 26px; }
+  .sm-info .tree-card .d { font-size: 13px; }
+  .sm-info .btn[hidden] { display: none; }
+  .sm-bar { position: sticky; bottom: 0; z-index: 5; padding: 12px 16px 16px; background: var(--sala); border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sb-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .sb-t .serif { font-size: 19px; font-weight: 400; }
+  .sb-t > span:last-child { font-size: 12px; color: var(--muted); }
+  .sm-bar .btn { padding: 14px 22px; font-size: 15px; }
+
+  @media (max-width: 1000px) {
+    .sd { display: none; }
+    .sm { display: block; }
+    .sala { margin-top: 96px; }
+  }
+</style>
+
+<script>
+  type Item = Record<string, string>;
+  const root = document.querySelector<HTMLElement>('[data-sala]');
+  if (root) {
+    const P: Item[] = JSON.parse(root.querySelector('[data-sala-json]')!.textContent!);
+    const n = P.length;
+    const $$ = <T extends HTMLElement>(sel: string, scope: ParentNode = root) => [...scope.querySelectorAll<T>(sel)];
+
+    // Rellena los textos y enlaces de un contenedor con la pieza i
+    const fill = (scope: HTMLElement, i: number) => {
+      const p = P[i];
+      $$('[data-f]', scope).forEach((el) => { el.textContent = p[el.dataset.f!]; });
+      $$<HTMLAnchorElement>('[data-href]', scope).forEach((a) => { a.href = p.href; });
+      $$<HTMLAnchorElement>('[data-3d]', scope).forEach((a) => { a.hidden = !p.model; if (p.model) a.href = p.model; });
+    };
+
+    // ----- ordenador -----
+    const sd = root.querySelector<HTMLElement>('.sd')!;
+    const panel = sd.querySelector<HTMLElement>('[data-panel]')!;
+    let sel = 0, view = 0, ft = 0;
+    const showImg = () => $$('[data-img]', sd).forEach((el) => { el.dataset.on = String(el.dataset.img === `${sel}-${view}`); });
+    const setView = (j: number) => {
+      view = j;
+      $$('[data-view]', sd).forEach((bt) => bt.setAttribute('aria-pressed', String(+bt.dataset.view! === j)));
+      showImg();
+    };
+    const pick = (i: number) => {
+      i = (i + n) % n;
+      if (i === sel) return;
+      sel = i;
+      $$('[data-item]', sd).forEach((bt) => bt.setAttribute('aria-current', String(+bt.dataset.item! === i)));
+      $$('[data-bar]', sd).forEach((bt) => bt.classList.toggle('on', +bt.dataset.bar! === i));
+      sd.querySelector('[data-num]')!.textContent = P[i].n;
+      setView(0);
+      clearTimeout(ft);
+      panel.classList.add('fade');
+      ft = window.setTimeout(() => { fill(sd, i); panel.classList.remove('fade'); }, 240);
+    };
+    $$('[data-item]', sd).forEach((bt) => bt.addEventListener('click', () => pick(+bt.dataset.item!)));
+    $$('[data-view]', sd).forEach((bt) => bt.addEventListener('click', () => setView(+bt.dataset.view!)));
+    sd.querySelector('[data-prev]')!.addEventListener('click', () => pick(sel - 1));
+    sd.querySelector('[data-next]')!.addEventListener('click', () => pick(sel + 1));
+    sd.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') pick(sel - 1);
+      if (e.key === 'ArrowRight') pick(sel + 1);
+    });
+
+    // ----- móvil -----
+    const sm = root.querySelector<HTMLElement>('.sm')!;
+    const track = sm.querySelector<HTMLElement>('[data-track]')!;
+    const slides = $$('[data-slide]', sm);
+    let ms = 0, mv = 0;
+    const setMView = (j: number) => {
+      mv = j;
+      $$('[data-mview]', sm).forEach((bt) => bt.setAttribute('aria-pressed', String(+bt.dataset.mview! === j)));
+      $$('[data-mimg]', sm).forEach((el) => {
+        const [i, k] = el.dataset.mimg!.split('-').map(Number);
+        el.dataset.on = String(k === (i === ms ? mv : 0));
+      });
+    };
+    const mpick = (i: number) => {
+      if (i === ms) return;
+      ms = i;
+      $$('[data-mbar] span', sm).forEach((s, k) => s.classList.toggle('on', k === i));
+      sm.querySelector('[data-num]')!.textContent = P[i].n;
+      fill(sm, i);
+      setMView(0);
+    };
+    const step = () => (slides[1]?.offsetLeft ?? 340) - slides[0].offsetLeft;
+    track.addEventListener('scroll', () => {
+      mpick(Math.max(0, Math.min(n - 1, Math.round(track.scrollLeft / step()))));
+    }, { passive: true });
+    $$('[data-mbar]', sm).forEach((bt, i) => bt.addEventListener('click', () => track.scrollTo({ left: i * step(), behavior: 'smooth' })));
+    $$('[data-mview]', sm).forEach((bt) => bt.addEventListener('click', () => setMView(+bt.dataset.mview!)));
+  }
+</script>

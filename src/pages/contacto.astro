@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+import OrderForm from '../components/OrderForm.astro';
+import Img from '../components/Img.astro';
+import { site } from '../data/site';
+import { photo } from '../data/photos';
+const { lat, lng } = site.geo;
+const bbox = [lng - 0.03, lat - 0.015, lng + 0.03, lat + 0.015].join(',');
+const tel = site.phone.replace(/\s/g, '');
+---
+<Layout title="Contacto" description={`Pide tu mueble de castaño o ven a ver el taller en ${site.address.city} (${site.address.province}). ${site.visitHours}.`} cta={false}>
+  <section class="head wrap g12">
+    <h1 class="serif">Cada mueble empieza con una conversación.</h1>
+    <p class="body-text">Cuéntanos qué necesitas y dónde irá. Roi te contesta en 24–48 horas. No cobramos nada hasta que esté todo hablado.</p>
+  </section>
+
+  <section class="main wrap g12">
+    <div class="form">
+      <OrderForm
+        subject="Mensaje desde la web"
+        choosePiece
+        messagePlaceholder="¿Qué mueble buscas? ¿Dónde irá? Cuéntanos lo que quieras."
+        thanksTitle="Gracias. Ya está en el taller."
+        thanks="Roi te escribe en 24–48 horas."
+      />
+    </div>
+    <aside class="data">
+      <dl>
+        <div><dt>Correo</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+        <div><dt>Teléfono</dt><dd><a href={`tel:${tel}`}>{site.phone}</a></dd></div>
+        <div><dt>WhatsApp</dt><dd><a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener">Escríbenos</a></dd></div>
+        <div><dt>Instagram</dt><dd><a href={site.instagram} target="_blank" rel="noopener">Fotos del taller</a></dd></div>
+      </dl>
+    </aside>
+  </section>
+
+  <section id="visita" class="visit">
+    <div class="ph visit-ph"><Img photo={photo.L} sizes="(max-width: 900px) 100vw, 50vw" /></div>
+    <div class="visit-txt">
+      <span class="eyebrow">Visita el taller</span>
+      <h2 class="serif">Ven a ver la madera</h2>
+      <p class="body-text">Lo mejor para elegir un mueble es tocar los tablones. Te enseñamos el taller y, si el tiempo acompaña, subimos al souto.</p>
+      <div class="spec">
+        <span>Dirección</span><span>{site.address.street}<br />{site.address.postalCode} {site.address.city} ({site.address.province})</span>
+        <span>Horario</span><span>{site.visitHours}</span>
+        <span>Cómo llegar</span><span><a class="u" href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=14/${lat}/${lng}`} target="_blank" rel="noopener">Abrir en el mapa</a></span>
+      </div>
+      <a href={`tel:${tel}`} class="btn btn-moss">Llamar para quedar</a>
+    </div>
+  </section>
+  <iframe class="map" title={`Mapa de ${site.address.city}`} loading="lazy"
+    src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`}></iframe>
+</Layout>
+
+<style>
+  .head { padding-top: clamp(56px, 7vw, 100px); padding-bottom: clamp(40px, 5vw, 72px); row-gap: 24px; align-items: end; }
+  .head h1 { grid-column: 1 / 9; font-size: clamp(44px, 6.1vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
+  .head p { grid-column: 9 / 13; }
+  .main { padding-bottom: clamp(72px, 8vw, 120px); row-gap: 48px; }
+  .form { grid-column: 1 / 8; }
+  .data { grid-column: 9 / 13; }
+  .data dl { margin: 0; border-top: 1px solid var(--ink); }
+  .data div { display: flex; flex-direction: column; gap: 4px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .data dt { font-size: 14px; color: var(--muted); }
+  .data dd { margin: 0; font-family: var(--serif); font-size: 24px; }
+  .visit { display: grid; grid-template-columns: 1fr 1fr; background: var(--sand); }
+  .visit-ph { min-height: 560px; }
+  .visit-ph :global(img) { position: absolute; inset: 0; }
+  .visit-txt { padding: clamp(48px, 6.7vw, 96px) clamp(22px, 5vw, 72px); display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+  .visit-txt h2 { font-size: clamp(40px, 4.45vw, 64px); line-height: 1; letter-spacing: -.02em; }
+  .visit-txt .spec { width: 100%; border-top-color: var(--line-2); }
+  .u { border-bottom: 1px solid currentColor; }
+  .map { display: block; width: 100%; height: 420px; border: 0; filter: grayscale(.6) sepia(.15); }
+  @media (max-width: 900px) {
+    .head, .main { display: flex; flex-direction: column; align-items: stretch; }
+    .visit { grid-template-columns: 1fr; }
+    .visit-ph { min-height: 320px; }
+    .map { height: 320px; }
+  }
+</style>

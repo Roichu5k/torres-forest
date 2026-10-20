@@ -1,0 +1,50 @@
+---
+import { site } from '../data/site';
+interface Props { cta?: boolean }
+const { cta = true } = Astro.props;
+const b = import.meta.env.BASE_URL;
+---
+{cta && (
+  <section class="cta" aria-label="Contacto">
+    <p class="cta-t serif">Cada mueble empieza con una conversación.</p>
+    <div class="cta-b">
+      <a href={`${b}contacto/`} class="btn btn-moss">Pide tu mueble</a>
+      <a href={`${b}contacto/#visita`} class="btn btn-line-dark">Visita el taller</a>
+    </div>
+  </section>
+)}
+<footer class="ftr">
+  <div class="row">
+    <a href={b} class="brand serif">{site.name}</a>
+    <span class="tag">{site.tagline}</span>
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+  </div>
+  <div class="row small">
+    <span>{site.address.street} · {site.address.postalCode} {site.address.city} ({site.address.province})</span>
+    <span class="ftr-links">
+      <a href={`${b}aviso-legal/`}>Aviso legal</a>
+      <a href={`${b}privacidad/`}>Privacidad</a>
+      <a href={site.instagram} rel="noopener" target="_blank">Instagram</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .cta { padding: clamp(64px, 10.4vw, 150px) var(--gx); background: var(--dark); color: var(--paper);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 64px; }
+  .cta-t { font-size: clamp(40px, 6.1vw, 88px); line-height: 1.02; letter-spacing: -.02em; max-width: 900px; }
+  .cta-b { display: flex; gap: 14px; flex-shrink: 0; }
+  .ftr { padding: 40px var(--gx) 32px; background: var(--darker); color: var(--foot); font-size: 15px; display: flex; flex-direction: column; gap: 24px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .brand { font-size: 22px; color: var(--paper); font-weight: 400; }
+  .ftr a:hover { color: var(--paper); }
+  .small { font-size: 13px; border-top: 1px solid #44443F; padding-top: 20px; }
+  .ftr-links { display: flex; gap: 24px; }
+  @media (max-width: 820px) {
+    .cta { flex-direction: column; align-items: stretch; gap: 28px; }
+    .cta-b { flex-direction: column; }
+    .row { flex-direction: column; gap: 6px; }
+    .tag { display: none; }
+    .ftr-links { flex-wrap: wrap; gap: 8px 20px; }
+  }
+</style>

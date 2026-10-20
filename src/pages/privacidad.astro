@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../data/site';
+---
+<Layout title="Política de privacidad" cta={false}>
+  <article class="legal wrap">
+    <h1 class="serif">Política de privacidad</h1>
+    <p class="warn">Texto de ejemplo. Hay que revisarlo y completarlo con los datos reales antes de publicar la web de verdad.</p>
+    <h2>Quién trata tus datos</h2>
+    <p>{site.owner.legalName} (NIF {site.owner.nif}), {site.address.street}, {site.address.postalCode} {site.address.city}. Correo: {site.email}.</p>
+    <h2>Qué datos y para qué</h2>
+    <p>Solo los que nos escribes en el formulario (nombre, correo, teléfono, localidad y tu mensaje), para contestarte y preparar el presupuesto o el encargo que nos pides.</p>
+    <h2>Base legal</h2>
+    <p>Tu consentimiento al enviar el formulario y, si encargas un mueble, la ejecución de ese encargo.</p>
+    <h2>Cuánto tiempo</h2>
+    <p>Mientras hablamos del encargo y, si se hace, durante los plazos que exige la ley para facturas y garantías.</p>
+    <h2>Con quién se comparten</h2>
+    <p>Con nadie, salvo obligación legal. No vendemos ni cedemos datos.</p>
+    <h2>Tus derechos</h2>
+    <p>Puedes pedir acceso, rectificación, supresión, oposición, limitación o portabilidad escribiendo a {site.email}. Si crees que no lo hemos hecho bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+    <h2>Cookies</h2>
+    <p>Esta web no usa cookies propias ni de analítica. Las tipografías se sirven desde la propia web. El mapa de la página de contacto se carga desde OpenStreetMap.</p>
+  </article>
+</Layout>

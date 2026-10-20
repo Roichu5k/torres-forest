@@ -1,0 +1,13 @@
+---
+// Anillos del tronco: el icono de la marca. `n` = cuántos anillos (1–4).
+interface Props { n?: number; size?: number; color?: string; stroke?: number; variant?: 'stages' | 'badge'; class?: string }
+const { n = 4, size = 28, color = 'currentColor', stroke = 1, variant = 'stages', class: cls } = Astro.props;
+const stages = [[14.2, 13.9, 5], [14.4, 13.8, 8.4], [14.6, 13.7, 11.2], [14.5, 13.8, 13.4]];
+const badge = [[14.2, 13.9, 5], [14.4, 13.8, 8.4], [14.5, 13.8, 12.4]];
+const rings = variant === 'badge' ? badge : stages.slice(0, n);
+---
+<svg class={cls} width={size} height={size} viewBox="0 0 28 28" aria-hidden="true"
+  style={`fill:none;stroke:${color};stroke-width:${stroke};flex-shrink:0`}>
+  <circle cx="14" cy="14" r="1.6" style={`fill:${color};stroke:none`} />
+  {rings.map(([cx, cy, r]) => <circle cx={cx} cy={cy} r={r} />)}
+</svg>
