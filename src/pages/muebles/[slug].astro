@@ -4,7 +4,7 @@ import Img from '../../components/Img.astro';
 import Rings from '../../components/Rings.astro';
 import Voice from '../../components/Voice.astro';
 import OrderForm from '../../components/OrderForm.astro';
-import { products, trees, numberWords, fmtPrice, defaultPrice, type Product } from '../../data/products';
+import { products, trees, numberWords, type Product } from '../../data/products';
 import { photo, img } from '../../data/photos';
 
 export function getStaticPaths() {
@@ -26,12 +26,6 @@ const gallery = [
 
 // Configuración por defecto
 const sel = Object.fromEntries(p.groups.map((g) => [g.key, g.default]));
-const price = defaultPrice(p);
-const optSub = (o: { s: string; p?: number }, g: { options: { p?: number }[] }) => {
-  // En grupos donde todas las opciones tienen precio propio (p. ej. largo), no se muestra el suplemento
-  const isBase = g.options.every((x) => (x.p ?? 0) > 0);
-  return o.s + (!isBase && o.p ? ` · +${o.p} €` : '');
-};
 const summary = p.groups.map((g) => {
   const o = g.options[g.default];
   return { key: g.key, k: g.label, v: o.full ?? `${o.l} · ${o.s.toLowerCase()}` };
@@ -58,12 +52,9 @@ const care = p.care ?? [
 const more = products.filter((x) => x.slug !== p.slug).slice(0, 3);
 const model = p.model3d ? `${b}3d/?p=${p.model3d}` : '';
 
-const cfgData = {
-  base: p.basePrice,
-  groups: p.groups,
-};
+const cfgData = { groups: p.groups };
 ---
-<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de castaño macizo hecha bajo pedido en Vilarmaior (A Coruña). Del árbol ${t.id} del ${t.souto}. ${p.lead}`} image={img(p.views[0], 1200)} cta={false}>
+<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de castaño macizo hecha bajo pedido en Vilarmaior (A Coruña). Del árbol ${t.id}, de ${t.souto}. ${p.lead}`} image={img(p.views[0], 1200)} cta={false}>
   <nav class="crumb wrap" aria-label="Ruta"><a href={`${b}muebles/`}>Muebles</a><span>/</span><span aria-current="page">{p.name}</span></nav>
 
   <section class="top wrap" data-cfg>
@@ -91,8 +82,8 @@ const cfgData = {
         <p class="v-roi">{p.lead}</p>
       </div>
       <div class="price-row">
-        <span class="price serif" data-price>{fmtPrice(price)}</span>
-        <span class="price-n">IVA y entrega en Galicia incluidos</span>
+        <span class="price serif">Bajo pedido</span>
+        <span class="price-n">Presupuesto sin compromiso en 24–48 horas</span>
       </div>
       {p.groups.map((g) => (
         <fieldset class="grp">
@@ -100,7 +91,7 @@ const cfgData = {
           <div class="opts" style={`grid-template-columns:repeat(${g.options.length},minmax(0,1fr))`}>
             {g.options.map((o, i) => (
               <button type="button" class="opt" data-g={g.key} data-o={i} aria-pressed={i === sel[g.key] ? 'true' : 'false'}>
-                <span class="ol">{o.l}</span><span class="os">{optSub(o, g)}</span>
+                <span class="ol">{o.l}</span><span class="os">{o.s}</span>
               </button>
             ))}
           </div>
@@ -172,7 +163,6 @@ const cfgData = {
         <p class="body-text">No cobramos nada todavía. Roi te escribe en 24–48 horas para hablar {p.laPieza.startsWith('el') ? 'del ' + p.laPieza.slice(3) : 'de ' + p.laPieza} y, si quieres, quedar en el taller.</p>
         <div class="spec">
           {summary.map((s) => <><span>{s.k}</span><span data-sum={s.key}>{s.v}</span></>)}
-          <span>Precio</span><span data-price>{fmtPrice(price)}</span>
         </div>
       </div>
       <div class="order-r">
@@ -201,7 +191,7 @@ const cfgData = {
   </section>
   <!-- Barra fija en móvil -->
   <div class="mbar" data-mbar>
-    <div class="mb-t"><span class="serif" data-price>{fmtPrice(price)}</span><span data-short>{shortCfg}</span></div>
+    <div class="mb-t"><span class="serif">{p.name}</span><span data-short>{shortCfg}</span></div>
     <a href="#encargar" class="btn btn-moss">Encargar</a>
   </div>
 </Layout>
@@ -226,7 +216,7 @@ const cfgData = {
   .cfg-h h1 { font-size: clamp(46px, 3.6vw, 52px); line-height: 1; letter-spacing: -.02em; }
   .cfg-h .v-roi { font-size: 17px; line-height: 1.42; }
   .price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; }
-  .price { font-size: 36px; font-weight: 400; font-variant-numeric: tabular-nums; }
+  .price { font-size: 30px; font-weight: 400; white-space: nowrap; }
   .price-n { font-size: 13px; color: var(--muted); text-align: right; }
   .grp { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .grp legend { font-size: 14px; font-weight: 500; padding: 0; margin-bottom: 10px; }
@@ -315,7 +305,7 @@ const cfgData = {
     .cfg { position: static; padding: 0 22px; gap: 24px; }
     .cfg-h { gap: 12px; }
     .cfg-h .eyebrow { font-size: 12px; }
-    .price { font-size: 32px; }
+    .price { font-size: 26px; }
     .price-n { font-size: 12px; max-width: 150px; }
     .opts { gap: 6px; }
     .opt { min-height: 56px; padding: 10px 12px; }
@@ -368,29 +358,26 @@ const cfgData = {
 </style>
 
 <script>
-  import { fmtPrice, type OptionGroup } from '../../data/products';
+  import type { OptionGroup } from '../../data/products';
 
   const root = document.querySelector<HTMLElement>('[data-cfg]');
   if (root) {
-    const { base, groups } = JSON.parse(root.querySelector('[data-cfg-json]')!.textContent!) as { base: number; groups: OptionGroup[] };
+    const { groups } = JSON.parse(root.querySelector('[data-cfg-json]')!.textContent!) as { groups: OptionGroup[] };
     const sel: Record<string, number> = Object.fromEntries(groups.map((g) => [g.key, g.default]));
 
     const render = () => {
-      let price = base;
       const short: string[] = [];
       groups.forEach((g, gi) => {
         const o = g.options[sel[g.key]];
-        price += o.p ?? 0;
         if (gi < 2) short.push(o.full ?? o.l);
         document.querySelectorAll<HTMLElement>(`[data-sum="${g.key}"]`).forEach((el) => { el.textContent = o.full ?? `${o.l} · ${o.s.toLowerCase()}`; });
         if (o.set) for (const [k, v] of Object.entries(o.set)) {
           document.querySelectorAll<HTMLElement>(`[data-dim="${k}"]`).forEach((el) => { el.textContent = v; });
         }
       });
-      document.querySelectorAll('[data-price]').forEach((el) => { el.textContent = fmtPrice(price); });
       document.querySelectorAll('[data-short]').forEach((el) => { el.textContent = short.join(' · '); });
       // Para el formulario: la configuración elegida, en texto
-      const cfgText = groups.map((g) => `${g.label}: ${g.options[sel[g.key]].full ?? g.options[sel[g.key]].l}`).join(' · ') + ` · Precio: ${fmtPrice(price)}`;
+      const cfgText = groups.map((g) => `${g.label}: ${g.options[sel[g.key]].full ?? g.options[sel[g.key]].l}`).join(' · ');
       document.querySelectorAll<HTMLInputElement>('input[name="configuracion"]').forEach((i) => { i.value = cfgText; });
     };
 

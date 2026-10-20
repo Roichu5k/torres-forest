@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Img from '../../components/Img.astro';
-import { products, trees, fmtPrice, minPrice } from '../../data/products';
+import { products, trees } from '../../data/products';
 const b = import.meta.env.BASE_URL;
 ---
 <Layout title="Muebles" description="Seis muebles de castaño macizo hechos bajo pedido en Vilarmaior (A Coruña). Cada uno lleva grabado el árbol del que salió.">
@@ -19,11 +19,11 @@ const b = import.meta.env.BASE_URL;
         </div>
         <div class="card-t">
           <span class="serif name">{p.name}</span>
-          <span class="price">desde {fmtPrice(minPrice(p))}</span>
+          <span class="price">{p.plazo} semanas</span>
         </div>
         <div class="card-s">
           <span>{p.cat}</span>
-          <span>Árbol {trees[p.tree].id} · {p.plazo} semanas</span>
+          <span>Árbol {trees[p.tree].id} · {trees[p.tree].souto}</span>
         </div>
       </a>
     ))}

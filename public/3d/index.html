@@ -37,8 +37,7 @@ three-d-stage:not(:defined){visibility:hidden}
 .crumb{font-size:14px;color:#7A7670;margin-top:4px}
 .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right}
 .back{font-size:15px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px}
-.price{font-family:'Newsreader',serif;font-size:34px;margin-top:14px;font-variant-numeric:tabular-nums}
-.dims{font-size:14px;color:#55524D}
+.dims{font-family:'Newsreader',serif;font-size:28px;margin-top:14px;font-variant-numeric:tabular-nums}
 .panel{left:50%;transform:translateX(-50%);bottom:24px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 18px;padding:14px 16px;background:rgba(246,243,237,.94);backdrop-filter:blur(8px);border:1px solid #DAD5CC;width:max-content;max-width:calc(100vw - 32px)}
 .row{display:flex;flex-direction:column;gap:6px}
 .row>span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#7A7670}
@@ -51,7 +50,7 @@ three-d-stage:not(:defined){visibility:hidden}
 .lbl{position:fixed;z-index:1;transform:translate(-50%,-50%);font:500 13px 'Hanken Grotesk',sans-serif;padding:4px 9px;background:#2E2D2B;color:#F2EEE6;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .3s}
 @media (max-width:760px){
   .top{left:18px;right:18px;top:18px}
-  .price{font-size:26px;margin-top:8px}
+  .dims{font-size:22px;margin-top:8px}
   .panel{left:10px;right:10px;bottom:10px;transform:none;width:auto;max-width:none;padding:12px;gap:10px 14px}
   .seg button{padding:9px 12px;font-size:13px}
 }
@@ -68,7 +67,6 @@ three-d-stage:not(:defined){visibility:hidden}
   </div>
   <div class="right">
     <a class="back" id="back" href="../muebles/mesa-souto/">← Volver a la ficha</a>
-    <div class="price" id="price">3.450 €</div>
     <div class="dims" id="dims">240 × 100 × 76 cm</div>
   </div>
 </div>
@@ -252,17 +250,17 @@ function buildHorta(o) {
 
 // ---------- productos ----------
 const P = {
-  mesa: { name: 'Mesa Souto', file: 'mesa-souto', build: buildMesa, base: [2950, 3450, 3950], href: '../muebles/mesa-souto/',
+  mesa: { name: 'Mesa Souto', file: 'mesa-souto', build: buildMesa, href: '../muebles/mesa-souto/',
     opts: [
       { k: 'size', l: 'Largo', v: ['200 cm', '240 cm', '280 cm'], d: 1 },
-      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Cera', 'Jabón'], d: 0, p: [0, 120, 90], tint: ['#D29E6A', '#C68F5C', '#EBD6B6'], rough: [0.55, 0.38, 0.78] },
-      { k: 'edge', l: 'Canto', v: ['Recto', 'Vivo'], d: 0, p: [0, 280] }
-    ], price: o => P.mesa.base[o.size] },
+      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Cera', 'Jabón'], d: 0, tint: ['#D29E6A', '#C68F5C', '#EBD6B6'], rough: [0.55, 0.38, 0.78] },
+      { k: 'edge', l: 'Canto', v: ['Recto', 'Vivo'], d: 0 }
+    ] },
   horta: { name: 'Butaca Horta', file: 'butaca-horta', build: buildHorta, href: '../muebles/butaca-horta/',
     opts: [
-      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Jabón', 'Sin tratar'], d: 0, p: [0, 40, 0], tint: ['#D29E6A', '#EBD6B6', '#E2C39C'], rough: [0.5, 0.75, 0.88] },
-      { k: 'foot', l: 'Reposapiés', v: ['Sin', 'Con'], d: 0, p: [0, 240] }
-    ], price: () => 890 }
+      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Jabón', 'Sin tratar'], d: 0, tint: ['#D29E6A', '#EBD6B6', '#E2C39C'], rough: [0.5, 0.75, 0.88] },
+      { k: 'foot', l: 'Reposapiés', v: ['Sin', 'Con'], d: 0 }
+    ] }
 };
 const qp = new URLSearchParams(location.search).get('p');
 let cur = P[qp] ? qp : 'mesa', O = {};
@@ -305,7 +303,6 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 function refresh(reframe) {
   const pr = P[cur];
   applyFinish();
@@ -314,8 +311,6 @@ function refresh(reframe) {
   stage.setObject(obj, { keepCamera: !reframe });
   if (reframe) { const c = stage._controls, d = 0.16 * (cur === 'mesa' ? 1 : 0.6); c.target.y -= d; stage._camera.position.y -= d; c.update(); }
   const [x, z, h] = buildDims(obj);
-  let price = pr.price(O); pr.opts.forEach(op => { if (op.p) price += op.p[O[op.k]]; });
-  document.getElementById('price').textContent = fmt(price);
   document.getElementById('dims').textContent = `${x} × ${z} × ${h} cm`;
   document.getElementById('crumb').textContent = pr.name + ' · vista 3D';
   document.getElementById('back').href = pr.href;
