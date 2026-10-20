@@ -63,7 +63,7 @@ const cfgData = {
   groups: p.groups,
 };
 ---
-<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de castaño macizo hecha bajo pedido en Chantada (Lugo). Del árbol ${t.id} del ${t.souto}. ${p.lead}`} image={img(p.views[0], 1200)} cta={false}>
+<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de castaño macizo hecha bajo pedido en Vilarmaior (A Coruña). Del árbol ${t.id} del ${t.souto}. ${p.lead}`} image={img(p.views[0], 1200)} cta={false}>
   <nav class="crumb wrap" aria-label="Ruta"><a href={`${b}muebles/`}>Muebles</a><span>/</span><span aria-current="page">{p.name}</span></nav>
 
   <section class="top wrap" data-cfg>
@@ -128,7 +128,7 @@ const cfgData = {
       <div class="tree-h">
         <span class="eyebrow">La madera de {p.estaPieza}</span>
         <h2 class="serif">Árbol {t.id}</h2>
-        <span class="tree-d">{t.souto}, Chantada · {t.edad} años · {p.tablones}</span>
+        <span class="tree-d">{t.souto}, Vilarmaior · {t.edad} años · {p.tablones}</span>
       </div>
       <ol class="tree-steps">
         {steps.map((s) => <li><span class="se">{s.e}</span><span class="serif st">{s.t}</span><span class="sd">{s.d}</span></li>)}

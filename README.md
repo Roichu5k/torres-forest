@@ -1,6 +1,6 @@
 # Torres Forest
 
-Web de Torres Forest, carpintería en castaño macizo en Chantada (Lugo).
+Web de Torres Forest, carpintería en castaño macizo en Vilarmaior (A Coruña).
 
 Publicada en: https://roichu5k.github.io/torres-forest/
 

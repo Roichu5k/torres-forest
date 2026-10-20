@@ -2,21 +2,21 @@
 
 export const site = {
   name: 'Torres Forest',
-  tagline: 'Carpintería en castaño macizo · Chantada, Lugo',
+  tagline: 'Carpintería en castaño macizo · Vilarmaior, A Coruña',
   description:
-    'Carpintería familiar en Chantada (Lugo). Muebles de castaño macizo hechos bajo pedido, con madera de nuestros propios soutos. Cada pieza lleva grabado el árbol del que salió.',
+    'Carpintería familiar en Vilarmaior (A Coruña). Muebles de castaño macizo hechos bajo pedido, con madera de nuestros propios soutos. Cada pieza lleva grabado el árbol del que salió.',
   email: 'hola@torresforest.gal', // [INVENTADO]
   phone: '+34 600 000 000', // [INVENTADO]
   whatsapp: '34600000000', // [INVENTADO] solo dígitos, con prefijo
   instagram: 'https://www.instagram.com/', // [INVENTADO]
   address: {
     street: 'Lugar de O Vilar, 12', // [INVENTADO]
-    postalCode: '27500',
-    city: 'Chantada',
-    province: 'Lugo',
+    postalCode: '15637', // [REVISAR]
+    city: 'Vilarmaior',
+    province: 'A Coruña',
   },
-  // Coordenadas aproximadas de Chantada, para el mapa
-  geo: { lat: 42.6087, lng: -7.7714 },
+  // Coordenadas aproximadas de Vilarmaior, para el mapa
+  geo: { lat: 43.3483, lng: -8.1528 },
   visitHours: 'Sábados de 10:00 a 14:00, con cita', // [INVENTADO]
   owner: {
     legalName: 'Javier Torres [APELLIDOS]', // [INVENTADO]
