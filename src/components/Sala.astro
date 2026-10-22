@@ -6,12 +6,12 @@ import Rings from './Rings.astro';
 import { products, trees } from '../data/products';
 
 const b = import.meta.env.BASE_URL;
-const VIEWS = ['Pieza', 'Detalle', 'En casa'];
+const VIEWS = ['Pieza', 'Detalle', 'Otra vista'];
 const data = products.map((p, i) => {
   const t = trees[p.tree];
   return {
     n: String(i + 1).padStart(2, '0'), name: p.name, cat: p.cat, line: p.line, med: p.med, acab: p.acab,
-    plazo: `${p.plazo} semanas`, tree: t.id, souto: t.souto, tala: t.tala,
+    plazo: `${p.plazo} semanas`, tree: t.id, monte: t.monte, tala: t.tala,
     href: `${b}muebles/${p.slug}/`, model: p.model3d ? `${b}3d/?p=${p.model3d}` : '',
   };
 });
@@ -43,7 +43,7 @@ const total = String(products.length).padStart(2, '0');
             </li>
           ))}
         </ol>
-        <p class="note">Todas se hacen bajo pedido, con castaño de nuestros soutos de Vilarmaior.</p>
+        <p class="note">Todas se hacen bajo pedido, con pino de nuestros montes de Vilarmaior.</p>
       </div>
       <div class="sd-stage">
         {products.map((p, i) => p.views.map((v, j) => (
@@ -71,7 +71,7 @@ const total = String(products.length).padStart(2, '0');
         <div class="bottom">
           <div class="spec">
             <span>Medidas</span><span data-f="med">{P.med}</span>
-            <span>Madera</span><span>Castaño macizo</span>
+            <span>Madera</span><span>Pino macizo</span>
             <span>Acabado</span><span data-f="acab">{P.acab}</span>
             <span>Plazo</span><span data-f="plazo">{P.plazo}</span>
           </div>
@@ -80,7 +80,7 @@ const total = String(products.length).padStart(2, '0');
             <div class="tc">
               <span class="k">Madera de origen</span>
               <span class="t">Árbol <span data-f="tree">{P.tree}</span></span>
-              <span class="d"><span data-f="souto">{P.souto}</span> · talado en <span data-f="tala">{P.tala}</span></span>
+              <span class="d"><span data-f="monte">{P.monte}</span> · talado en <span data-f="tala">{P.tala}</span></span>
             </div>
           </div>
           <a class="btn btn-moss btn-block" href={P.href} data-href>Pedir esta pieza</a>
@@ -135,7 +135,7 @@ const total = String(products.length).padStart(2, '0');
         <Rings size={40} color="var(--gold)" stroke={0.8} />
         <div class="tc">
           <span class="t">Árbol <span data-f="tree">{P.tree}</span></span>
-          <span class="d"><span data-f="souto">{P.souto}</span> · talado en <span data-f="tala">{P.tala}</span></span>
+          <span class="d"><span data-f="monte">{P.monte}</span> · talado en <span data-f="tala">{P.tala}</span></span>
         </div>
       </div>
       <a class="btn btn-line btn-block" href={P.model} data-3d hidden={!P.model}>Ver en 3D</a>

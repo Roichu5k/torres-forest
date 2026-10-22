@@ -18,10 +18,10 @@ const treeNum = t.id.replace('nº ', '');
 
 const gallery = [
   { l: 'Pieza', ph: p.views[0] },
-  { l: 'Veta', ph: p.views[1] },
-  { l: 'En casa', ph: p.views[2] },
-  { l: 'Tablones', ph: { ...photo.J, alt: `Tablones del árbol ${t.id}` } },
-  { l: 'Taller', ph: photo.L },
+  { l: 'Detalle', ph: p.views[1] },
+  { l: 'Otra vista', ph: p.views[2] },
+  { l: 'El monte', ph: { ...photo.troncos, alt: `Troncos de pino del monte ${t.monte}` } },
+  { l: 'Taller', ph: photo.taller },
 ];
 
 // Configuración por defecto
@@ -54,7 +54,7 @@ const model = p.model3d ? `${b}3d/?p=${p.model3d}` : '';
 
 const cfgData = { groups: p.groups };
 ---
-<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de castaño macizo hecha bajo pedido en Vilarmaior (A Coruña). Del árbol ${t.id}, de ${t.souto}. ${p.lead}`} image={img(p.views[0], 1200)} cta={false}>
+<Layout title={p.name} description={`${p.name}, ${p.cat.toLowerCase()} de pino macizo, bajo pedido en Vilarmaior (A Coruña). Del árbol ${t.id}, de ${t.monte}. ${p.lead}`} image={new URL(img(p.views[0], 1200), Astro.site).href} cta={false}>
   <nav class="crumb wrap" aria-label="Ruta"><a href={`${b}muebles/`}>Muebles</a><span>/</span><span aria-current="page">{p.name}</span></nav>
 
   <section class="top wrap" data-cfg>
@@ -77,7 +77,7 @@ const cfgData = { groups: p.groups };
     <!-- Configurador -->
     <div class="cfg">
       <div class="cfg-h">
-        <span class="eyebrow">{p.cat} · Castaño macizo</span>
+        <span class="eyebrow">{p.cat} · Pino macizo</span>
         <h1 class="serif">{p.name}</h1>
         <p class="v-roi">{p.lead}</p>
       </div>
@@ -114,12 +114,12 @@ const cfgData = { groups: p.groups };
 
   <!-- El árbol -->
   <section class="tree">
-    <div class="ph tree-ph"><Img photo={photo.N} sizes="(max-width: 900px) 100vw, 42vw" alt={`El castaño ${t.id} en pie`} /></div>
+    <div class="ph tree-ph"><Img photo={photo.monte2} sizes="(max-width: 900px) 100vw, 42vw" alt={`El pinar de ${t.monte}`} /></div>
     <div class="tree-txt">
       <div class="tree-h">
         <span class="eyebrow">La madera de {p.estaPieza}</span>
         <h2 class="serif">Árbol {t.id}</h2>
-        <span class="tree-d">{t.souto}, Vilarmaior · {t.edad} años · {p.tablones}</span>
+        <span class="tree-d">{t.monte}, Vilarmaior · {t.edad} años · {p.tablones}</span>
       </div>
       <ol class="tree-steps">
         {steps.map((s) => <li><span class="se">{s.e}</span><span class="serif st">{s.t}</span><span class="sd">{s.d}</span></li>)}

@@ -17,12 +17,12 @@ const marks = [
 <Layout overlayHeader>
   <!-- Portada -->
   <section class="hero">
-    <div class="ph hero-ph"><div class="px" data-px><Img photo={photo.M} eager /></div></div>
+    <div class="ph hero-ph"><div class="px" data-px><Img photo={photo.monte} eager /></div></div>
     <div class="hero-shade"></div>
     <div class="hero-in">
       <h1 class="hero-t serif">Del monte<br />al mueble</h1>
       <div class="hero-side">
-        <p>Un castaño, cuatro estaciones y dos pares de manos.<span class="d-only"> Muebles de castaño macizo desde Vilarmaior, A Coruña.</span></p>
+        <p>Un pino, cuatro estaciones y dos pares de manos.<span class="d-only"> Muebles de pino macizo desde Vilarmaior, A Coruña.</span></p>
         <a href="#muebles" class="btn btn-paper">Ver muebles</a>
       </div>
     </div>
@@ -31,8 +31,8 @@ const marks = [
   <!-- Presentación -->
   <section class="intro wrap g12">
     <p class="intro-k eyebrow">Carpintería familiar<br class="d-only" /><span class="m-only"> · </span>Padre e hijo</p>
-    <p class="intro-t serif">Talamos el castaño en nuestros propios montes, lo secamos sin prisa y lo trabajamos en el taller hasta convertirlo en un mueble para toda la vida.</p>
-    <Voice who="javier" by="Javier Torres, padre" class="intro-j">“Yo elijo el árbol. Llevo cuarenta años subiendo al mismo souto.”</Voice>
+    <p class="intro-t serif">Talamos el pino en nuestros propios montes, lo secamos sin prisa y lo trabajamos en el taller hasta convertirlo en un mueble para toda la vida.</p>
+    <Voice who="javier" by="Javier Torres, padre" class="intro-j">“Yo elijo el árbol. Llevo cuarenta años subiendo al mismo monte.”</Voice>
     <Voice who="roi" by="Roi Torres, hijo" class="intro-r">Yo decido qué mueble va a ser. Lo dibujo antes de que el árbol caiga.</Voice>
   </section>
 
@@ -55,13 +55,13 @@ const marks = [
     <article id="estacion-1" class="stage s1 wrap g12" data-stage>
       <p class="st-k"><span class="eyebrow">01 · Invierno</span><span>Enero de 2024</span></p>
       <h2 class="st-t serif">La tala</h2>
-      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.N} sizes="(max-width: 820px) 100vw, 60vw" /></div></div>
+      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.troncos} sizes="(max-width: 820px) 100vw, 60vw" /></div></div>
       <div class="st-txt">
-        <p class="body-text">Talamos en invierno, con la savia parada y la luna menguante. Así la madera se mueve menos y dura más.</p>
+        <p class="body-text">Talamos en invierno, con la savia parada. Así el pino suelta menos resina, se mueve menos y dura más.</p>
         <Voice who="javier" by="Javier" size="clamp(24px, 2.1vw, 30px)">“De la Chousa do Penedo salen como mucho seis árboles al año. El resto se queda.”</Voice>
         <div class="spec">
           <span>Árbol</span><span>nº 112</span>
-          <span>Edad</span><span>78 años</span>
+          <span>Edad</span><span>46 años</span>
           <span>Monte</span><span>Chousa do Penedo, Vilarmaior</span>
         </div>
       </div>
@@ -74,7 +74,7 @@ const marks = [
         <p class="body-text">Abrimos el tronco en tablones y numeramos cada uno. Ese número acompaña a la madera hasta el mueble.</p>
         <Voice who="roi" by="Roi" size="clamp(19px, 1.67vw, 24px)">Ya en la sierra veo qué tablón será el tablero y cuál las patas.</Voice>
       </div>
-      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.J} sizes="(max-width: 820px) 100vw, 55vw" /></div></div>
+      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.troncosCerca} sizes="(max-width: 820px) 100vw, 55vw" /></div></div>
     </article>
 
     <article id="estacion-3" class="stage s3" data-stage>
@@ -83,21 +83,21 @@ const marks = [
         <h2 class="st-t serif">El secado</h2>
       </div>
       <div class="ph st-ph dark">
-        <div class="px" data-px><Img photo={photo.K} /></div>
+        <div class="px" data-px><Img photo={photo.monte2} /></div>
         <div class="st-shade"></div>
         <div class="st-over">
-          <p class="st-over-b">Los tablones secan al aire, apilados y separados con listones. Un año por cada pulgada de grosor: veinte meses.</p>
+          <p class="st-over-b">Los tablones secan al aire, apilados y separados con listones. El pino seca más rápido que otras maderas: unos catorce meses.</p>
           <Voice who="javier" by="Javier" size="clamp(28px, 2.36vw, 34px)" light>“La prisa se nota en la madera. Por eso no la tenemos.”</Voice>
         </div>
       </div>
-      <p class="body-text wrap m-only st-after">Los tablones secan al aire, apilados y separados con listones. Un año por cada pulgada de grosor: veinte meses.</p>
+      <p class="body-text wrap m-only st-after">Los tablones secan al aire, apilados y separados con listones. El pino seca más rápido que otras maderas: unos catorce meses.</p>
     </article>
 
     <article id="estacion-4" class="stage s4 wrap g12" data-stage>
       <p class="st-k"><span class="eyebrow">04 · Otoño</span><span>Octubre de 2025</span></p>
       <h2 class="st-t serif">El taller</h2>
-      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.L} /></div></div>
-      <p class="st-b body-text">Ensamblamos con uniones de madera y acabamos con aceite natural. Cada pieza lleva grabados su árbol y su año.</p>
+      <div class="ph st-ph"><div class="px" data-px><Img photo={photo.taller} /></div></div>
+      <p class="st-b body-text">Ensamblamos con uniones de madera (o tornillería inox en lo que va fuera) y acabamos con aceite o lasur. Cada pieza lleva grabados su árbol y su año.</p>
       <Voice who="roi" by="Roi" size="clamp(19px, 1.67vw, 24px)" class="st-r">Cuando firmo una mesa, firmo también el árbol del que salió.</Voice>
     </article>
   </section>

@@ -8,7 +8,7 @@ const { lat, lng } = site.geo;
 const bbox = [lng - 0.03, lat - 0.015, lng + 0.03, lat + 0.015].join(',');
 const tel = site.phone.replace(/\s/g, '');
 ---
-<Layout title="Contacto" description={`Pide tu mueble de castaño o ven a ver el taller en ${site.address.city} (${site.address.province}). ${site.visitHours}.`} cta={false}>
+<Layout title="Contacto" description={`Pide tu mueble de pino o ven a ver el taller en ${site.address.city} (${site.address.province}). ${site.visitHours}.`} cta={false}>
   <section class="head wrap g12">
     <h1 class="serif">Cada mueble empieza con una conversación.</h1>
     <p class="body-text">Cuéntanos qué necesitas y dónde irá. Roi te contesta en 24–48 horas. No cobramos nada hasta que esté todo hablado.</p>
@@ -35,11 +35,11 @@ const tel = site.phone.replace(/\s/g, '');
   </section>
 
   <section id="visita" class="visit">
-    <div class="ph visit-ph"><Img photo={photo.L} sizes="(max-width: 900px) 100vw, 50vw" /></div>
+    <div class="ph visit-ph"><Img photo={photo.taller} sizes="(max-width: 900px) 100vw, 50vw" /></div>
     <div class="visit-txt">
       <span class="eyebrow">Visita el taller</span>
       <h2 class="serif">Ven a ver la madera</h2>
-      <p class="body-text">Lo mejor para elegir un mueble es tocar los tablones. Te enseñamos el taller y, si el tiempo acompaña, subimos al souto.</p>
+      <p class="body-text">Lo mejor para elegir un mueble es tocar los tablones. Te enseñamos el taller y, si el tiempo acompaña, subimos al monte.</p>
       <div class="spec">
         <span>Dirección</span><span>{site.address.street}<br />{site.address.postalCode} {site.address.city} ({site.address.province})</span>
         <span>Horario</span><span>{site.visitHours}</span>

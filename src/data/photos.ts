@@ -1,26 +1,40 @@
-// Fotos de relleno de Unsplash (licencia libre). Hay que sustituirlas por fotos propias:
-// pon las fotos en /public/fotos/ y cambia `src` por, p. ej., 'fotos/mesa-souto.jpg'.
+// Fotos propias del taller, en /public/fotos/. Para cambiar una, sustituye el archivo o cambia `src`.
 
 export type Photo = { src: string; alt: string; credit?: string };
 
-const U = (id: string) => `https://images.unsplash.com/photo-${id}`;
+const F = (name: string) => `fotos/${name}.jpg`;
 
 export const photo = {
-  A: { src: U('1597960194599-22929afc25b1'), alt: 'Mesa de madera maciza', credit: 'Devin Berko' },
-  B: { src: U('1603376728541-6e1906a300e6'), alt: 'Silla de madera', credit: 'Raygar He' },
-  C: { src: U('1532588213355-52317771cce6'), alt: 'Aparador de madera', credit: 'Tiana Borcherding' },
-  D: { src: U('1714486271387-40af1f086020'), alt: 'Butaca de jardín de madera', credit: 'Luis Gherasim' },
-  E: { src: U('1696650502270-8cacd4fb5530'), alt: 'Banco de madera', credit: 'Jason Leung' },
-  F: { src: U('1517467139951-f5a925c9f9de'), alt: 'Arcón de madera', credit: 'Deborah Diem' },
-  G: { src: U('1773847521422-77ff84e29353'), alt: 'Mueble de madera en una casa', credit: 'Clay Banks' },
-  H: { src: U('1751288301679-b6121e123dd1'), alt: 'Detalle de la veta del castaño', credit: 'Bozhin Karaivanov' },
-  Ig: { src: U('1633175113177-5be3854f29c8'), alt: 'Detalle de madera', credit: 'engin akyurt' },
-  J: { src: U('1651447041389-1f499536b4cb'), alt: 'Troncos aserrados y numerados', credit: 'Nic Y-C' },
-  K: { src: U('1634672652995-ee7525bce595'), alt: 'Tablones apilados secando al aire', credit: 'Patrick Robert Doyle' },
-  L: { src: U('1497219055242-93359eeed651'), alt: 'Manos trabajando la madera con un formón', credit: 'Dominik Scythe' },
-  M: { src: U('1448375240586-882707db888b'), alt: 'El souto en invierno', credit: 'Sebastian Unrau' },
-  N: { src: U('1425913397330-cf8af2ff40a1'), alt: 'Castaño en pie en el monte', credit: 'Steven Kamenar' },
-  fam: { src: U('1547609434-b732edfee020'), alt: 'Javier y Roi trabajando en el taller', credit: 'Will Suddreth' },
+  // Muebles
+  eira: { src: F('mesa-eira'), alt: 'Mesa de comedor de pino con patas de caballete' },
+  eira2: { src: F('mesa-eira-2'), alt: 'Mesa de caballete de pino recién terminada en el taller' },
+  eiraD: { src: F('mesa-eira-detalle'), alt: 'Tablero de pino y tirantes en V de la mesa de caballete' },
+  horta: { src: F('butaca-horta'), alt: 'Butaca de jardín de pino con lasur color teca' },
+  hortaD: { src: F('butaca-horta-detalle'), alt: 'Asiento de listones de la butaca de jardín' },
+  hortaPar: { src: F('butaca-horta-pareja'), alt: 'Dos butacas de jardín de pino' },
+  areal: { src: F('tumbona-areal'), alt: 'Tumbona de pino con cojín sobre el césped' },
+  arealD: { src: F('tumbona-areal-detalle'), alt: 'Respaldo regulable de la tumbona de pino' },
+  arealCojin: { src: F('tumbona-areal-cojin'), alt: 'Tumbona de pino con el cojín extendido' },
+  roda: { src: F('mesa-roda'), alt: 'Mesa redonda de pino con patas cruzadas' },
+  rodaD: { src: F('mesa-roda-estructura'), alt: 'Estructura de patas cruzadas de la mesa redonda' },
+  roda2: { src: F('mesa-roda-2'), alt: 'Mesa redonda de pino vista de frente' },
+  ferreiro: { src: F('mesa-ferreiro'), alt: 'Mesa de pino con patas de acero' },
+  ferreiroD: { src: F('mesa-ferreiro-detalle'), alt: 'Tablero de tablas de pino aceitado sobre patas de acero' },
+  ferreiroCasa: { src: F('mesa-ferreiro-casa'), alt: 'Mesa de pino puesta con flores en una casa de piedra' },
+  tendal: { src: F('tendal'), alt: 'Tendedero de pared de pino, cerrado' },
+  tendalD: { src: F('tendal-abriendo'), alt: 'Tendedero de pared de pino abriéndose' },
+  tendalAbierto: { src: F('tendal-abierto'), alt: 'Tendedero de pared de pino abierto, con pinzas' },
+  // Monte y taller
+  monte: { src: F('monte-pinar'), alt: 'El pinar a contraluz' },
+  monte2: { src: F('monte-pinar-2'), alt: 'Pinos en el monte' },
+  troncos: { src: F('troncos-pila'), alt: 'Pila de troncos de pino recién talados' },
+  troncosCerca: { src: F('troncos-cerca'), alt: 'Testas de los troncos de pino apilados' },
+  fam: { src: F('troncos-familia'), alt: 'En el monte, sobre la pila de troncos' },
+  taller: { src: F('taller-tumbona'), alt: 'Una tumbona a medio montar en el taller' },
+  // Encargos a medida
+  encimera: { src: F('encargo-encimera'), alt: 'Encimera de cocina de pino quemado' },
+  puerta: { src: F('encargo-puerta'), alt: 'Puerta de cuadra de pino hecha a medida' },
+  ventana: { src: F('encargo-ventana'), alt: 'Puerta de pino con ventanas y herrajes negros' },
 } satisfies Record<string, Photo>;
 
 const isRemote = (src: string) => src.startsWith('http');

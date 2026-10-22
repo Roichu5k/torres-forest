@@ -2,9 +2,9 @@
 
 export const site = {
   name: 'Torres Forest',
-  tagline: 'Carpintería en castaño macizo · Vilarmaior, A Coruña',
+  tagline: 'Carpintería en pino macizo · Vilarmaior, A Coruña',
   description:
-    'Carpintería familiar en Vilarmaior (A Coruña). Muebles de castaño macizo hechos bajo pedido, con madera de nuestros propios soutos. Cada pieza lleva grabado el árbol del que salió.',
+    'Carpintería familiar en Vilarmaior (A Coruña). Muebles de pino del país hechos bajo pedido, con madera de nuestros propios montes. Cada pieza lleva grabado el árbol del que salió.',
   email: 'hola@torresforest.gal', // [INVENTADO]
   phone: '+34 600 000 000', // [INVENTADO]
   whatsapp: '34600000000', // [INVENTADO] solo dígitos, con prefijo

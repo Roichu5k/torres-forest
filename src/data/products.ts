@@ -1,12 +1,12 @@
 // Catálogo de muebles y árboles de origen.
-// TODO EL CONTENIDO ES INVENTADO: medidas, plazos, árboles y fotos (Unsplash) son de relleno.
+// Las piezas y las fotos son reales. Medidas, plazos, opciones y árboles son ESTIMADOS: hay que revisarlos.
 // Para añadir un mueble, copia uno de la lista y cambia sus datos; la ficha se genera sola.
 
 import { photo, type Photo } from './photos';
 
 export type Tree = {
   id: string; // 'nº 112'
-  souto: string;
+  monte: string;
   edad: number;
   tala: string; // 'enero de 2024'
   talaCorta: string; // 'Enero de 2024'
@@ -16,26 +16,27 @@ export type Tree = {
   quote: string; // Javier habla del árbol
 };
 
+// [INVENTADO] Árboles de ejemplo
 export const trees: Record<string, Tree> = {
   '112': {
-    id: 'nº 112', souto: 'Chousa do Penedo', edad: 78,
-    tala: 'enero de 2024', talaCorta: 'Enero de 2024', aserrado: 'Abril de 2024', secado: '20 meses al aire', taller: 'Octubre de 2025',
-    quote: 'El 112 tenía la veta muy recta. De esos salen los buenos tableros.',
+    id: 'nº 112', monte: 'Chousa do Penedo', edad: 46,
+    tala: 'enero de 2024', talaCorta: 'Enero de 2024', aserrado: 'Abril de 2024', secado: '14 meses al aire', taller: 'Octubre de 2025',
+    quote: 'El 112 tenía la veta muy recta y pocos nudos. De esos salen los buenos tableros.',
   },
   '97': {
-    id: 'nº 97', souto: 'A Revolta', edad: 64,
-    tala: 'febrero de 2023', talaCorta: 'Febrero de 2023', aserrado: 'Abril de 2023', secado: '26 meses al aire', taller: 'Junio de 2025',
-    quote: 'El 97 creció torcido buscando el sol. Esa curva la aprovechamos para los respaldos.',
+    id: 'nº 97', monte: 'A Revolta', edad: 38,
+    tala: 'febrero de 2023', talaCorta: 'Febrero de 2023', aserrado: 'Abril de 2023', secado: '18 meses al aire', taller: 'Junio de 2025',
+    quote: 'El 97 creció en el borde del monte, con mucho sol. Tiene los nudos sanos y bien repartidos.',
   },
   '104': {
-    id: 'nº 104', souto: 'Chousa do Penedo', edad: 71,
-    tala: 'enero de 2024', talaCorta: 'Enero de 2024', aserrado: 'Abril de 2024', secado: '20 meses al aire', taller: 'Octubre de 2025',
+    id: 'nº 104', monte: 'Chousa do Penedo', edad: 42,
+    tala: 'enero de 2024', talaCorta: 'Enero de 2024', aserrado: 'Abril de 2024', secado: '14 meses al aire', taller: 'Octubre de 2025',
     quote: 'El 104 estaba al lado del 112. La misma tierra, la misma veta: son casi hermanos.',
   },
   '88': {
-    id: 'nº 88', souto: 'A Revolta', edad: 83,
-    tala: 'febrero de 2023', talaCorta: 'Febrero de 2023', aserrado: 'Marzo de 2023', secado: '26 meses al aire', taller: 'Junio de 2025',
-    quote: 'El 88 era el más viejo de A Revolta. Ya estaba hueco por dentro; lo sano lo guardamos para algo que dure.',
+    id: 'nº 88', monte: 'A Revolta', edad: 52,
+    tala: 'febrero de 2023', talaCorta: 'Febrero de 2023', aserrado: 'Marzo de 2023', secado: '18 meses al aire', taller: 'Junio de 2025',
+    quote: 'El 88 era el más viejo de A Revolta. Mucha resina: aguanta bien la humedad.',
   },
 };
 
@@ -59,13 +60,13 @@ export type Product = {
   medidasNote: string;
   medidaCustom: string;
   care?: string[];
-  model3d?: 'mesa' | 'horta';
+  model3d?: 'horta';
   // Textos con género
   encargar: string; // 'Encargar esta mesa'
   laPieza: string; // 'la mesa'
   estaPieza: string; // 'esta mesa'
   acompanar: string; // 'Para acompañarla'
-  views: [Photo, Photo, Photo]; // Pieza, Detalle, En casa
+  views: [Photo, Photo, Photo]; // Pieza, Detalle, Otra vista
 };
 
 const finishes = (): OptionGroup => ({
@@ -73,170 +74,168 @@ const finishes = (): OptionGroup => ({
   options: [
     { l: 'Aceite', s: 'Tono miel', full: 'Aceite natural' },
     { l: 'Cera', s: 'Tacto sedoso', full: 'Cera de abeja' },
-    { l: 'Jabón', s: 'Tono claro', full: 'Jabón natural' },
+    { l: 'Natural', s: 'Tono claro', full: 'Barniz mate al agua' },
   ],
 });
 
+const outdoor = (def = 0): OptionGroup => ({
+  key: 'fin', label: 'Acabado', default: def,
+  options: [
+    { l: 'Lasur teca', s: 'Tono anaranjado', full: 'Lasur exterior color teca' },
+    { l: 'Aceite', s: 'Tono miel', full: 'Aceite de exterior' },
+    { l: 'Lasur nogal', s: 'Tono oscuro', full: 'Lasur exterior color nogal' },
+  ],
+});
+
+const outdoorCare = [
+  'Puede estar fuera todo el año, pero el pino necesita su protección: una mano de lasur o aceite cada primavera.',
+  'En invierno, mejor bajo techo o con una funda. Si no, que las patas no queden metidas en un charco.',
+  'Si la madera se pone gris, se lija suave y se vuelve a proteger. Queda como nueva.',
+];
+
 export const products: Product[] = [
   {
-    slug: 'mesa-souto', name: 'Mesa Souto', cat: 'Mesa de comedor',
-    line: 'Un solo tablero de 240 cm, sin empalmes. Caben diez sin chocar los codos.',
-    lead: 'Un solo tablero, sin empalmes. Caben diez sin chocar los codos.',
-    med: '240 × 100 × 76 cm', acab: 'Aceite natural', plazo: 12,
-    tree: '112', tablones: 'tablones 4 a 9', stock: 'Quedan tablones para dos mesas.',
+    slug: 'mesa-eira', name: 'Mesa Eira', cat: 'Mesa de comedor',
+    line: 'Patas de caballete con tirantes en V. Se desmonta en tres piezas para meterla por cualquier puerta.',
+    lead: 'Patas de caballete con tirantes en V. Se desmonta para meterla por cualquier puerta.',
+    med: '160 × 90 × 76 cm', acab: 'Aceite natural', plazo: 6,
+    tree: '112', tablones: 'tablones 4 a 7', stock: 'Quedan tablones para dos mesas.',
     groups: [
       { key: 'size', label: 'Largo', default: 1, options: [
-        { l: '200 cm', s: '6–8 personas', set: { Largo: '200 cm', Ancho: '95 cm', Peso: '≈ 72 kg', Comensales: '6–8' } },
-        { l: '240 cm', s: '8–10 personas', set: { Largo: '240 cm', Ancho: '100 cm', Peso: '≈ 86 kg', Comensales: '8–10' } },
-        { l: '280 cm', s: '10–12 personas', set: { Largo: '280 cm', Ancho: '105 cm', Peso: '≈ 101 kg', Comensales: '10–12' } },
+        { l: '140 cm', s: '4–6 personas', set: { Largo: '140 cm', Ancho: '85 cm', Peso: '≈ 38 kg', Comensales: '4–6' } },
+        { l: '160 cm', s: '6 personas', set: { Largo: '160 cm', Ancho: '90 cm', Peso: '≈ 44 kg', Comensales: '6' } },
+        { l: '200 cm', s: '8 personas', set: { Largo: '200 cm', Ancho: '95 cm', Peso: '≈ 55 kg', Comensales: '8' } },
       ] },
       finishes(),
-      { key: 'edge', label: 'Canto', default: 0, options: [
-        { l: 'Recto', s: 'Cantos limpios' },
-        { l: 'Vivo', s: 'Con la forma del tronco' },
-      ] },
     ],
     dims: [
-      { k: 'Largo', v: '240 cm' }, { k: 'Ancho', v: '100 cm' }, { k: 'Alto', v: '76 cm' }, { k: 'Tablero', v: '5 cm' },
-      { k: 'Patas', v: '9 × 9 cm' }, { k: 'Peso', v: '≈ 86 kg' }, { k: 'Comensales', v: '8–10' }, { k: 'Uniones', v: 'Caja y espiga' },
+      { k: 'Largo', v: '160 cm' }, { k: 'Ancho', v: '90 cm' }, { k: 'Alto', v: '76 cm' }, { k: 'Tablero', v: '3,5 cm' },
+      { k: 'Patas', v: '7 × 7 cm' }, { k: 'Peso', v: '≈ 44 kg' }, { k: 'Comensales', v: '6' }, { k: 'Uniones', v: 'Caja y espiga' },
     ],
-    medidasNote: 'Las patas van metidas 20 cm hacia dentro, para que nadie se quede en la esquina.',
-    medidaCustom: '¿Necesitas otra medida? La hacemos a medida entre 160 y 320 cm de largo.',
-    model3d: 'mesa',
+    medidasNote: 'Los tirantes en V van por el centro, así nadie choca con las rodillas.',
+    medidaCustom: '¿Necesitas otra medida? La hacemos a medida entre 120 y 240 cm de largo.',
     encargar: 'Encargar esta mesa', laPieza: 'la mesa', estaPieza: 'esta mesa', acompanar: 'Para acompañarla',
-    views: [photo.A, photo.H, photo.G],
+    views: [photo.eira, photo.eiraD, photo.eira2],
   },
   {
     slug: 'butaca-horta', name: 'Butaca Horta', cat: 'Silla de jardín',
-    line: 'La silla de jardín de siempre, la de la sobremesa en la huerta. Le bajé un poco el asiento y nada más.',
-    lead: 'La de la sobremesa en la huerta. Le bajé un poco el asiento y nada más.',
-    med: '68 × 82 × 94 cm', acab: 'Sin barniz, el castaño aguanta la intemperie', plazo: 6,
+    line: 'La silla de jardín de respaldo alto, la de la sobremesa en la huerta. Brazos anchos para dejar el vaso.',
+    lead: 'La de la sobremesa en la huerta. Brazos anchos para dejar el vaso.',
+    med: '74 × 90 × 98 cm', acab: 'Lasur exterior color teca', plazo: 4,
     tree: '97', tablones: 'tablones 2 y 3', stock: 'Quedan tablones para cinco butacas.',
     groups: [
-      { key: 'fin', label: 'Acabado', default: 2, options: [
-        { l: 'Aceite', s: 'Tono miel', full: 'Aceite natural' },
-        { l: 'Jabón', s: 'Tono claro', full: 'Jabón natural' },
-        { l: 'Sin tratar', s: 'Se vuelve gris plata', full: 'Sin tratar' },
-      ] },
+      outdoor(),
       { key: 'foot', label: 'Reposapiés', default: 0, options: [
         { l: 'Sin', s: 'Solo la butaca' },
         { l: 'Con', s: 'A juego, suelto' },
       ] },
     ],
     dims: [
-      { k: 'Ancho', v: '68 cm' }, { k: 'Fondo', v: '82 cm' }, { k: 'Alto', v: '94 cm' }, { k: 'Asiento', v: '36 cm' },
-      { k: 'Peso', v: '≈ 14 kg' }, { k: 'Uniones', v: 'Tornillería inox' },
+      { k: 'Ancho', v: '74 cm' }, { k: 'Fondo', v: '90 cm' }, { k: 'Alto', v: '98 cm' }, { k: 'Asiento', v: '38 cm' },
+      { k: 'Peso', v: '≈ 12 kg' }, { k: 'Uniones', v: 'Tornillería inox' },
     ],
-    medidasNote: 'El asiento va a 36 cm, más bajo que una silla. Es para estar, no para comer.',
+    medidasNote: 'El asiento va bajo y echado hacia atrás. Es para estar, no para comer.',
     medidaCustom: '¿La quieres para dos? Hacemos la versión banco de 130 cm.',
-    care: [
-      'Fuera todo el año sin problema. El castaño sin tratar se vuelve gris plata con el sol.',
-      'Si quieres mantener el tono miel, una mano de aceite cada primavera.',
-      'En invierno, mejor con las patas levantadas del suelo si hay charcos.',
-    ],
+    care: outdoorCare,
     model3d: 'horta',
     encargar: 'Encargar esta butaca', laPieza: 'la butaca', estaPieza: 'esta butaca', acompanar: 'Para acompañarla',
-    views: [photo.D, photo.Ig, photo.M],
+    views: [photo.horta, photo.hortaD, photo.hortaPar],
   },
   {
-    slug: 'silla-lareira', name: 'Silla Lareira', cat: 'Silla de comedor',
-    line: 'El respaldo sale de una sola pieza curvada al vapor. Va a juego con la Mesa Souto.',
-    lead: 'El respaldo sale de una sola pieza curvada al vapor. Va a juego con la Mesa Souto.',
-    med: '46 × 52 × 82 cm', acab: 'Aceite natural', plazo: 8,
-    tree: '97', tablones: 'tablones 11 a 14', stock: 'Quedan tablones para doce sillas.',
+    slug: 'tumbona-areal', name: 'Tumbona Areal', cat: 'Tumbona',
+    line: 'El respaldo sube y baja en cuatro posiciones. Lleva un cojín grueso, para quedarse dormido al sol.',
+    lead: 'El respaldo sube y baja en cuatro posiciones. Para quedarse dormido al sol.',
+    med: '200 × 65 × 32 cm', acab: 'Aceite de exterior', plazo: 4,
+    tree: '88', tablones: 'tablones 5 a 9', stock: 'Quedan tablones para tres tumbonas.',
     groups: [
-      finishes(),
-      { key: 'seat', label: 'Asiento', default: 0, options: [
-        { l: 'Madera', s: 'Castaño macizo' },
-        { l: 'Enea', s: 'Tejido a mano' },
+      outdoor(1),
+      { key: 'cojin', label: 'Cojín', default: 1, options: [
+        { l: 'Sin', s: 'Solo la madera' },
+        { l: 'Con', s: 'Cojín crudo acolchado' },
       ] },
     ],
     dims: [
-      { k: 'Ancho', v: '46 cm' }, { k: 'Fondo', v: '52 cm' }, { k: 'Alto', v: '82 cm' }, { k: 'Asiento', v: '45 cm' },
-      { k: 'Peso', v: '≈ 6 kg' }, { k: 'Uniones', v: 'Caja y espiga' },
+      { k: 'Largo', v: '200 cm' }, { k: 'Ancho', v: '65 cm' }, { k: 'Alto', v: '32 cm' }, { k: 'Respaldo', v: '4 posiciones' },
+      { k: 'Peso', v: '≈ 22 kg' }, { k: 'Uniones', v: 'Tornillería inox' },
     ],
-    medidasNote: 'Las hacemos por juegos: dos, cuatro, seis u ocho sillas.',
-    medidaCustom: '¿Necesitas una altura distinta? Ajustamos el asiento entre 43 y 48 cm.',
-    encargar: 'Encargar estas sillas', laPieza: 'las sillas', estaPieza: 'estas sillas', acompanar: 'Para acompañarlas',
-    views: [photo.B, photo.H, photo.G],
+    medidasNote: 'Los listones van separados un dedo: el agua de la lluvia cae y no se queda.',
+    medidaCustom: '¿Eres muy alto? La alargamos hasta 220 cm.',
+    care: outdoorCare,
+    encargar: 'Encargar esta tumbona', laPieza: 'la tumbona', estaPieza: 'esta tumbona', acompanar: 'Para acompañarla',
+    views: [photo.areal, photo.arealD, photo.arealCojin],
   },
   {
-    slug: 'aparador-eira', name: 'Aparador Eira', cat: 'Aparador',
-    line: 'Cuatro puertas con tablones del mismo árbol, para que la veta siga de una a otra.',
-    lead: 'Cuatro puertas con tablones del mismo árbol, para que la veta siga de una a otra.',
-    med: '200 × 45 × 80 cm', acab: 'Aceite natural', plazo: 14,
-    tree: '112', tablones: 'tablones 14 a 17', stock: 'Quedan tablones para un aparador más.',
+    slug: 'mesa-roda', name: 'Mesa Roda', cat: 'Mesa redonda',
+    line: 'Tablero redondo sobre dos marcos que se cruzan. Sin esquinas, en la cocina se pasa mejor.',
+    lead: 'Tablero redondo sobre dos marcos que se cruzan. Sin esquinas, en la cocina se pasa mejor.',
+    med: 'Ø 100 × 76 cm', acab: 'Aceite natural', plazo: 5,
+    tree: '104', tablones: 'tablones 1 a 3', stock: 'Quedan tablones para tres mesas.',
+    groups: [
+      { key: 'size', label: 'Diámetro', default: 1, options: [
+        { l: '90 cm', s: '4 personas', set: { Diámetro: '90 cm', Peso: '≈ 24 kg', Comensales: '4' } },
+        { l: '100 cm', s: '4–5 personas', set: { Diámetro: '100 cm', Peso: '≈ 28 kg', Comensales: '4–5' } },
+        { l: '120 cm', s: '6 personas', set: { Diámetro: '120 cm', Peso: '≈ 36 kg', Comensales: '6' } },
+      ] },
+      finishes(),
+    ],
+    dims: [
+      { k: 'Diámetro', v: '100 cm' }, { k: 'Alto', v: '76 cm' }, { k: 'Tablero', v: '3 cm' }, { k: 'Patas', v: '5 × 5 cm' },
+      { k: 'Peso', v: '≈ 28 kg' }, { k: 'Comensales', v: '4–5' },
+    ],
+    medidasNote: 'Los dos marcos se encajan a media madera. Desmontada cabe en el maletero.',
+    medidaCustom: '¿Otro tamaño? La hacemos entre 80 y 140 cm de diámetro.',
+    encargar: 'Encargar esta mesa', laPieza: 'la mesa', estaPieza: 'esta mesa', acompanar: 'Para acompañarla',
+    views: [photo.roda, photo.rodaD, photo.roda2],
+  },
+  {
+    slug: 'mesa-ferreiro', name: 'Mesa Ferreiro', cat: 'Mesa de comedor',
+    line: 'Tablero de tablas de pino aceitado sobre patas de acero. Lo de madera lo hacemos nosotros; el hierro, un herrero de la zona.',
+    lead: 'Tablero de pino aceitado sobre patas de acero, hechas por un herrero de la zona.',
+    med: '180 × 80 × 76 cm', acab: 'Aceite natural', plazo: 6,
+    tree: '112', tablones: 'tablones 8 a 12', stock: 'Quedan tablones para dos mesas.',
     groups: [
       { key: 'size', label: 'Largo', default: 1, options: [
-        { l: '160 cm', s: 'Tres puertas', set: { Largo: '160 cm', Puertas: '3', Peso: '≈ 58 kg' } },
-        { l: '200 cm', s: 'Cuatro puertas', set: { Largo: '200 cm', Puertas: '4', Peso: '≈ 72 kg' } },
-        { l: '240 cm', s: 'Cinco puertas', set: { Largo: '240 cm', Puertas: '5', Peso: '≈ 86 kg' } },
-      ] },
-      finishes(),
-      { key: 'pull', label: 'Tirador', default: 0, options: [
-        { l: 'Uñero', s: 'Tallado en la puerta' },
-        { l: 'Torneado', s: 'Pomo de castaño' },
-      ] },
-    ],
-    dims: [
-      { k: 'Largo', v: '200 cm' }, { k: 'Fondo', v: '45 cm' }, { k: 'Alto', v: '80 cm' }, { k: 'Puertas', v: '4' },
-      { k: 'Baldas', v: '2 por hueco' }, { k: 'Peso', v: '≈ 72 kg' },
-    ],
-    medidasNote: 'Las baldas se mueven de altura. Caben las fuentes grandes de Navidad.',
-    medidaCustom: '¿Otro largo? Lo hacemos entre 120 y 280 cm.',
-    encargar: 'Encargar este aparador', laPieza: 'el aparador', estaPieza: 'este aparador', acompanar: 'Para acompañarlo',
-    views: [photo.C, photo.L, photo.A],
-  },
-  {
-    slug: 'banco-corredor', name: 'Banco Corredor', cat: 'Banco',
-    line: 'Estrecho y largo, para el corredor de una casa de piedra. Para sentarse a quitarse las botas.',
-    lead: 'Estrecho y largo, para el corredor de una casa de piedra.',
-    med: '180 × 36 × 45 cm', acab: 'Aceite natural', plazo: 6,
-    tree: '104', tablones: 'tablones 1 y 2', stock: 'Quedan tablones para tres bancos.',
-    groups: [
-      { key: 'size', label: 'Largo', default: 1, options: [
-        { l: '140 cm', s: '2 personas', set: { Largo: '140 cm', Peso: '≈ 15 kg' } },
-        { l: '180 cm', s: '3 personas', set: { Largo: '180 cm', Peso: '≈ 19 kg' } },
-        { l: '220 cm', s: '4 personas', set: { Largo: '220 cm', Peso: '≈ 23 kg' } },
+        { l: '140 cm', s: '4–6 personas', set: { Largo: '140 cm', Peso: '≈ 34 kg', Comensales: '4–6' } },
+        { l: '180 cm', s: '6–8 personas', set: { Largo: '180 cm', Peso: '≈ 42 kg', Comensales: '6–8' } },
+        { l: '240 cm', s: '10 personas', set: { Largo: '240 cm', Peso: '≈ 56 kg', Comensales: '10' } },
       ] },
       finishes(),
     ],
     dims: [
-      { k: 'Largo', v: '180 cm' }, { k: 'Fondo', v: '36 cm' }, { k: 'Alto', v: '45 cm' }, { k: 'Asiento', v: '4 cm' },
-      { k: 'Peso', v: '≈ 19 kg' }, { k: 'Uniones', v: 'Cola de milano' },
+      { k: 'Largo', v: '180 cm' }, { k: 'Ancho', v: '80 cm' }, { k: 'Alto', v: '76 cm' }, { k: 'Tablero', v: '3,5 cm' },
+      { k: 'Patas', v: 'Acero negro' }, { k: 'Peso', v: '≈ 42 kg' }, { k: 'Comensales', v: '6–8' },
     ],
-    medidasNote: 'Con 36 cm de fondo cabe en un pasillo de un metro y todavía se pasa bien.',
-    medidaCustom: '¿Otro largo? Lo hacemos entre 100 y 260 cm.',
-    encargar: 'Encargar este banco', laPieza: 'el banco', estaPieza: 'este banco', acompanar: 'Para acompañarlo',
-    views: [photo.E, photo.K, photo.N],
+    medidasNote: 'Las patas de acero ocupan poco: caben más sillas que con patas de madera.',
+    medidaCustom: '¿Necesitas otra medida? La hacemos entre 120 y 280 cm de largo.',
+    encargar: 'Encargar esta mesa', laPieza: 'la mesa', estaPieza: 'esta mesa', acompanar: 'Para acompañarla',
+    views: [photo.ferreiro, photo.ferreiroD, photo.ferreiroCasa],
   },
   {
-    slug: 'arca-fiadeiro', name: 'Arca Fiadeiro', cat: 'Arcón',
-    line: 'Como las arcas de las casas de aldea, con la bisagra también de madera.',
-    lead: 'Como las arcas de las casas de aldea, con la bisagra también de madera.',
-    med: '110 × 50 × 62 cm', acab: 'Cera de abeja', plazo: 10,
-    tree: '88', tablones: 'tablones 5 a 8', stock: 'Solo quedan tablones para dos arcas.',
+    slug: 'tendal', name: 'Tendal', cat: 'Tendedero de pared',
+    line: 'Cerrado es un cuadro en la pared. Se abre con dos cuerdas y tiende una lavadora entera.',
+    lead: 'Cerrado es un cuadro en la pared. Abierto tiende una lavadora entera.',
+    med: '80 × 120 × 10 cm', acab: 'Lasur exterior color nogal', plazo: 3,
+    tree: '104', tablones: 'tablones 4 y 5', stock: 'Quedan tablones para seis tendales.',
     groups: [
-      { key: 'fin', label: 'Acabado', default: 0, options: [
-        { l: 'Cera', s: 'Tacto sedoso', full: 'Cera de abeja' },
-        { l: 'Aceite', s: 'Tono miel', full: 'Aceite natural' },
+      { key: 'size', label: 'Alto', default: 1, options: [
+        { l: '100 cm', s: '8 cuerdas', set: { Alto: '100 cm', Cuerdas: '8', Tendido: '≈ 6 m' } },
+        { l: '120 cm', s: '10 cuerdas', set: { Alto: '120 cm', Cuerdas: '10', Tendido: '≈ 8 m' } },
+        { l: '150 cm', s: '13 cuerdas', set: { Alto: '150 cm', Cuerdas: '13', Tendido: '≈ 10 m' } },
       ] },
-      { key: 'inner', label: 'Interior', default: 0, options: [
-        { l: 'Castaño', s: 'Madera vista' },
-        { l: 'Lino', s: 'Forrado a mano' },
-      ] },
+      outdoor(2),
     ],
     dims: [
-      { k: 'Largo', v: '110 cm' }, { k: 'Fondo', v: '50 cm' }, { k: 'Alto', v: '62 cm' }, { k: 'Capacidad', v: '≈ 280 l' },
-      { k: 'Peso', v: '≈ 34 kg' }, { k: 'Bisagra', v: 'Madera' },
+      { k: 'Ancho', v: '80 cm' }, { k: 'Alto', v: '120 cm' }, { k: 'Fondo cerrado', v: '10 cm' }, { k: 'Cuerdas', v: '10' },
+      { k: 'Tendido', v: '≈ 8 m' }, { k: 'Cuerda', v: 'Acero plastificado' },
     ],
-    medidasNote: 'La tapa aguanta abierta sola. No se cae sobre los dedos.',
-    medidaCustom: '¿La quieres a los pies de la cama? La hacemos a la medida de tu cama.',
-    encargar: 'Encargar esta arca', laPieza: 'el arca', estaPieza: 'esta arca', acompanar: 'Para acompañarla',
-    views: [photo.F, photo.Ig, photo.K],
+    medidasNote: 'Abierto sale unos 60 cm de la pared. Mira que no choque con una ventana.',
+    medidaCustom: '¿Tienes un hueco concreto? Lo hacemos a la medida de tu pared.',
+    care: outdoorCare,
+    encargar: 'Encargar este tendal', laPieza: 'el tendal', estaPieza: 'este tendal', acompanar: 'Para acompañarlo',
+    views: [photo.tendal, photo.tendalD, photo.tendalAbierto],
   },
 ];
 
 export const numberWords: Record<number, string> = {
-  6: 'Seis semanas', 8: 'Ocho semanas', 10: 'Diez semanas', 12: 'Doce semanas', 14: 'Catorce semanas',
+  3: 'Tres semanas', 4: 'Cuatro semanas', 5: 'Cinco semanas', 6: 'Seis semanas', 8: 'Ocho semanas',
 };

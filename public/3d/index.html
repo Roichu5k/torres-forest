@@ -57,17 +57,17 @@ three-d-stage:not(:defined){visibility:hidden}
 </style>
 </head>
 <body>
-<three-d-stage name="mesa-souto" background="#ECE8E0" autorotate no-toolbar></three-d-stage>
+<three-d-stage name="butaca-horta" background="#ECE8E0" autorotate no-toolbar></three-d-stage>
 
 <div class="ov top">
   <div>
     <a class="brand" href="../">Torres Forest</a>
-    <div class="crumb" id="crumb">Mesa Souto · vista 3D</div>
+    <div class="crumb" id="crumb">Butaca Horta · vista 3D</div>
     <div class="note2">Modelo provisional · textura generada</div>
   </div>
   <div class="right">
-    <a class="back" id="back" href="../muebles/mesa-souto/">← Volver a la ficha</a>
-    <div class="dims" id="dims">240 × 100 × 76 cm</div>
+    <a class="back" id="back" href="../muebles/butaca-horta/">← Volver a la ficha</a>
+    <div class="dims" id="dims">74 × 90 × 98 cm</div>
   </div>
 </div>
 
@@ -151,7 +151,7 @@ function profX(shape, t, x0, mat, name) { const g = ext(shape, t); g.rotateY(-Ma
 function horiz(shape, t, yTop, mat, name) { const g = ext(shape, t); g.rotateX(Math.PI / 2); g.translate(0, yTop, 0); const m = new THREE.Mesh(g, mat); m.name = name; return m; }
 const mirrorS = (pts) => { const s = new THREE.Shape(); pts.forEach(([x, y], i) => i ? s.lineTo(-x, y) : s.moveTo(-x, y)); s.closePath(); return s; };
 
-// ---------- Mesa Souto ----------
+// ---------- Mesa (sin uso: no corresponde a ninguna pieza real del catálogo) ----------
 const H = 0.76, T = 0.05;
 function topShape(L, W, live) {
   if (!live) return rectS(-L / 2, -W / 2, L / 2, W / 2, 0.008);
@@ -250,20 +250,14 @@ function buildHorta(o) {
 
 // ---------- productos ----------
 const P = {
-  mesa: { name: 'Mesa Souto', file: 'mesa-souto', build: buildMesa, href: '../muebles/mesa-souto/',
-    opts: [
-      { k: 'size', l: 'Largo', v: ['200 cm', '240 cm', '280 cm'], d: 1 },
-      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Cera', 'Jabón'], d: 0, tint: ['#D29E6A', '#C68F5C', '#EBD6B6'], rough: [0.55, 0.38, 0.78] },
-      { k: 'edge', l: 'Canto', v: ['Recto', 'Vivo'], d: 0 }
-    ] },
   horta: { name: 'Butaca Horta', file: 'butaca-horta', build: buildHorta, href: '../muebles/butaca-horta/',
     opts: [
-      { k: 'fin', l: 'Acabado', v: ['Aceite', 'Jabón', 'Sin tratar'], d: 0, tint: ['#D29E6A', '#EBD6B6', '#E2C39C'], rough: [0.5, 0.75, 0.88] },
+      { k: 'fin', l: 'Acabado', v: ['Lasur teca', 'Aceite', 'Lasur blanco'], d: 0, tint: ['#B8693A', '#D29E6A', '#EDE6DA'], rough: [0.45, 0.55, 0.6] },
       { k: 'foot', l: 'Reposapiés', v: ['Sin', 'Con'], d: 0 }
     ] }
 };
 const qp = new URLSearchParams(location.search).get('p');
-let cur = P[qp] ? qp : 'mesa', O = {};
+let cur = P[qp] ? qp : 'horta', O = {};
 const resetOpts = () => { O = {}; P[cur].opts.forEach(x => O[x.k] = x.d); O.dim = 0; };
 
 function applyFinish() {

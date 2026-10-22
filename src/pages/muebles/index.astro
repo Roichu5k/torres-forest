@@ -2,12 +2,13 @@
 import Layout from '../../layouts/Layout.astro';
 import Img from '../../components/Img.astro';
 import { products, trees } from '../../data/products';
+import { photo } from '../../data/photos';
 const b = import.meta.env.BASE_URL;
 ---
-<Layout title="Muebles" description="Seis muebles de castaño macizo hechos bajo pedido en Vilarmaior (A Coruña). Cada uno lleva grabado el árbol del que salió.">
+<Layout title="Muebles" description="Seis muebles de pino macizo hechos bajo pedido en Vilarmaior (A Coruña). Cada uno lleva grabado el árbol del que salió.">
   <section class="head wrap g12">
     <h1 class="serif">Muebles</h1>
-    <p class="body-text">Seis piezas. Todas se hacen bajo pedido, con castaño de nuestros soutos de Vilarmaior, y cada una lleva grabado su árbol.</p>
+    <p class="body-text">Seis piezas. Todas se hacen bajo pedido, con pino de nuestros montes de Vilarmaior, y cada una lleva grabado su árbol.</p>
   </section>
 
   <section class="grid wrap">
@@ -23,7 +24,7 @@ const b = import.meta.env.BASE_URL;
         </div>
         <div class="card-s">
           <span>{p.cat}</span>
-          <span>Árbol {trees[p.tree].id} · {trees[p.tree].souto}</span>
+          <span>Árbol {trees[p.tree].id} · {trees[p.tree].monte}</span>
         </div>
       </a>
     ))}
@@ -33,6 +34,11 @@ const b = import.meta.env.BASE_URL;
     <p class="serif">¿Buscas algo que no está aquí?</p>
     <p class="body-text">También hacemos muebles a medida: cocinas, puertas, escaleras, lo que haga falta. Empezamos igual, hablando.</p>
     <a href={`${b}contacto/`} class="btn btn-line">Cuéntanos tu idea</a>
+    <div class="jobs">
+      {[photo.encimera, photo.puerta, photo.ventana].map((ph) => (
+        <figure><div class="ph job-ph"><Img photo={ph} sizes="(max-width: 700px) 80vw, 30vw" w={900} /></div><figcaption>{ph.alt}</figcaption></figure>
+      ))}
+    </div>
   </section>
 </Layout>
 
@@ -53,6 +59,11 @@ const b = import.meta.env.BASE_URL;
   .price { font-size: 15px; font-variant-numeric: tabular-nums; }
   .card-s { font-size: 14px; color: var(--muted); }
   .custom { margin: clamp(96px, 11vw, 160px) 0; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; max-width: 760px; }
+  .jobs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 100%; margin-top: 24px; text-align: left; }
+  .jobs figure { margin: 0; }
+  .job-ph { aspect-ratio: 3 / 4; margin-bottom: 8px; }
+  .jobs figcaption { font-size: 14px; color: var(--muted); }
+  @media (max-width: 700px) { .jobs { grid-template-columns: repeat(3, 78%); overflow-x: auto; scroll-snap-type: x mandatory; } .jobs figure { scroll-snap-align: start; } }
   .custom .serif { font-size: clamp(32px, 3.3vw, 48px); line-height: 1.1; }
   @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 700px) {
