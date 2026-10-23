@@ -25,7 +25,7 @@ export const photo = {
   tendalD: { src: F('tendal-abriendo'), alt: 'Tendedero de pared de pino abriéndose' },
   tendalAbierto: { src: F('tendal-abierto'), alt: 'Tendedero de pared de pino abierto, con pinzas' },
   // Monte y taller
-  monte: { src: F('monte-pinar'), alt: 'El pinar a contraluz' },
+  monte: { src: F('monte-pinar-hd'), alt: 'El pinar a contraluz' },
   monte2: { src: F('monte-pinar-2'), alt: 'Pinos en el monte' },
   troncos: { src: F('troncos-pila'), alt: 'Pila de troncos de pino recién talados' },
   troncosCerca: { src: F('troncos-cerca'), alt: 'Testas de los troncos de pino apilados' },
