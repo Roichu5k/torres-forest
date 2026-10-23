@@ -8,7 +8,7 @@ export const photo = {
   // Muebles
   eira: { src: F('mesa-eira'), alt: 'Mesa de comedor de pino con patas de caballete' },
   eira2: { src: F('mesa-eira-2'), alt: 'Mesa de caballete de pino recién terminada en el taller' },
-  eiraD: { src: F('mesa-eira-detalle'), alt: 'Tablero de pino y tirantes en V de la mesa de caballete' },
+  eiraD: { src: F('mesa-eira-detalle'), alt: 'Mesa de caballete de pino vista desde la cabecera, en el taller' },
   horta: { src: F('butaca-horta'), alt: 'Butaca de jardín de pino con lasur color teca' },
   hortaD: { src: F('butaca-horta-detalle'), alt: 'Asiento de listones de la butaca de jardín' },
   hortaPar: { src: F('butaca-horta-pareja'), alt: 'Dos butacas de jardín de pino' },
