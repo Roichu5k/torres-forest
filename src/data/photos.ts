@@ -2,7 +2,8 @@
 
 export type Photo = { src: string; alt: string; credit?: string };
 
-const F = (name: string) => `fotos/${name}.jpg`;
+// `?v=` obliga al navegador a bajar la foto nueva cuando se sustituyen; súbelo al cambiar fotos.
+const F = (name: string) => `fotos/${name}.jpg?v=2`;
 
 export const photo = {
   // Muebles
